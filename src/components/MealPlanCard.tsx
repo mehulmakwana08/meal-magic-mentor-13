@@ -32,7 +32,7 @@ const MealPlanCard = ({
         className
       )}
     >
-      <div className="h-24 overflow-hidden">
+      <div className="h-40 overflow-hidden">
         <img 
           src={image} 
           alt={title} 
