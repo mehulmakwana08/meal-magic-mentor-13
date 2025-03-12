@@ -32,7 +32,7 @@ const MealPlanCard = ({
         className
       )}
     >
-      <div className="h-32 overflow-hidden">
+      <div className="h-24 overflow-hidden">
         <img 
           src={image} 
           alt={title} 
@@ -40,18 +40,18 @@ const MealPlanCard = ({
         />
       </div>
       
-      <div className="p-4">
+      <div className="p-3">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-lg line-clamp-1">{title}</h3>
-          <span className="flex items-center text-sm font-medium text-primary">
-            <Calendar className="mr-1 w-4 h-4" />
+          <h3 className="font-semibold text-base line-clamp-1">{title}</h3>
+          <span className="flex items-center text-xs font-medium text-primary">
+            <Calendar className="mr-1 w-3 h-3" />
             {period}
           </span>
         </div>
         
-        <p className="text-sm text-muted-foreground mt-1">For: {beneficiary}</p>
+        <p className="text-xs text-muted-foreground mt-1 line-clamp-1">For: {beneficiary}</p>
         
-        <div className="mt-3">
+        <div className="mt-2">
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs font-medium">Completion</span>
             <span className="text-xs font-medium flex items-center">
@@ -67,18 +67,18 @@ const MealPlanCard = ({
           </div>
         </div>
         
-        <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
-          <div className="flex space-x-2">
-            <button className="p-1.5 rounded-full hover:bg-muted transition-colors">
-              <Share2 className="w-4 h-4 text-muted-foreground" />
+        <div className="mt-3 pt-2 border-t border-border flex items-center justify-between">
+          <div className="flex space-x-1">
+            <button className="p-1 rounded-full hover:bg-muted transition-colors">
+              <Share2 className="w-3 h-3 text-muted-foreground" />
             </button>
-            <button className="p-1.5 rounded-full hover:bg-muted transition-colors">
-              <Download className="w-4 h-4 text-muted-foreground" />
+            <button className="p-1 rounded-full hover:bg-muted transition-colors">
+              <Download className="w-3 h-3 text-muted-foreground" />
             </button>
           </div>
           
-          <button className="text-primary flex items-center text-sm font-medium">
-            View plan <ChevronRight className="ml-1 w-4 h-4" />
+          <button className="text-primary flex items-center text-xs font-medium">
+            View <ChevronRight className="ml-1 w-3 h-3" />
           </button>
         </div>
       </div>

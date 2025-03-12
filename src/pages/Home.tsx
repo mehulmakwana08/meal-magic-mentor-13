@@ -29,6 +29,38 @@ const Home = () => {
       lastUpdated: 'Yesterday',
       metrics: { weight: '14 kg', height: '95 cm' },
     },
+    { 
+      id: '3', 
+      name: 'Priya Patel', 
+      type: 'lactating' as ProfileType, 
+      stage: '4 months',
+      lastUpdated: '2 days ago',
+      metrics: { weight: '52 kg' },
+    },
+    { 
+      id: '4', 
+      name: 'Vikram Singh', 
+      type: 'child' as ProfileType, 
+      age: '5 years',
+      lastUpdated: '3 days ago',
+      metrics: { weight: '18 kg', height: '110 cm' },
+    },
+    { 
+      id: '5', 
+      name: 'Anaya Reddy', 
+      type: 'pregnant' as ProfileType, 
+      stage: '5 months',
+      lastUpdated: '3 days ago',
+      metrics: { weight: '55 kg' },
+    },
+    { 
+      id: '6', 
+      name: 'Rohan Verma', 
+      type: 'child' as ProfileType, 
+      age: '2 years',
+      lastUpdated: '4 days ago',
+      metrics: { weight: '12 kg', height: '85 cm' },
+    },
   ];
   
   const recentMealPlans = [
@@ -47,7 +79,39 @@ const Home = () => {
       period: 'This Week',
       completionRate: 60,
       image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=500&auto=format&fit=crop'
-    }
+    },
+    {
+      id: '3',
+      title: 'Lactation Support Plan',
+      beneficiary: 'Priya Patel',
+      period: 'This Week',
+      completionRate: 85,
+      image: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?q=80&w=500&auto=format&fit=crop'
+    },
+    {
+      id: '4',
+      title: 'Balanced Growth Diet',
+      beneficiary: 'Vikram Singh',
+      period: 'This Week',
+      completionRate: 50,
+      image: 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?q=80&w=500&auto=format&fit=crop'
+    },
+    {
+      id: '5',
+      title: 'Prenatal Nutrition Plan',
+      beneficiary: 'Anaya Reddy',
+      period: 'This Week',
+      completionRate: 65,
+      image: 'https://images.unsplash.com/photo-1547592180-85f173990888?q=80&w=500&auto=format&fit=crop'
+    },
+    {
+      id: '6',
+      title: 'Toddler Nutrition Plan',
+      beneficiary: 'Rohan Verma',
+      period: 'This Week',
+      completionRate: 70,
+      image: 'https://images.unsplash.com/photo-1559554704-14cb4571401d?q=80&w=500&auto=format&fit=crop'
+    },
   ];
 
   const toggleSpeech = () => {
@@ -69,6 +133,7 @@ const Home = () => {
             <AnimatedButton
               icon={PlusCircle}
               color="primary"
+              size="sm"
               onClick={() => navigate('/profiles')}
             >
               New Profile
@@ -94,25 +159,25 @@ const Home = () => {
         <div className="grid grid-cols-3 gap-3">
           <div 
             onClick={() => navigate('/profiles')}
-            className="flex flex-col items-center justify-center bg-teal-light text-teal-dark p-3 rounded-xl card-shadow"
+            className="flex flex-col items-center justify-center bg-teal-light text-teal-dark p-2 rounded-lg card-shadow"
           >
-            <Users className="w-8 h-8 mb-2" />
+            <Users className="w-6 h-6 mb-1" />
             <span className="text-xs font-medium text-center">Profiles</span>
           </div>
           
           <div
             onClick={() => navigate('/meal-plans')}
-            className="flex flex-col items-center justify-center bg-amber-light text-amber-dark p-3 rounded-xl card-shadow"
+            className="flex flex-col items-center justify-center bg-amber-light text-amber-dark p-2 rounded-lg card-shadow"
           >
-            <UtensilsCrossed className="w-8 h-8 mb-2" />
+            <UtensilsCrossed className="w-6 h-6 mb-1" />
             <span className="text-xs font-medium text-center">Meal Plans</span>
           </div>
           
           <div
             onClick={() => navigate('/progress')}
-            className="flex flex-col items-center justify-center bg-rose-light text-rose-dark p-3 rounded-xl card-shadow"
+            className="flex flex-col items-center justify-center bg-rose-light text-rose-dark p-2 rounded-lg card-shadow"
           >
-            <BarChart3 className="w-8 h-8 mb-2" />
+            <BarChart3 className="w-6 h-6 mb-1" />
             <span className="text-xs font-medium text-center">Progress</span>
           </div>
         </div>
@@ -130,7 +195,7 @@ const Home = () => {
           </button>
         </div>
         
-        <div className="space-y-3 animate-slide-up">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 animate-slide-up">
           {recentProfiles.map((profile) => (
             <ProfileCard
               key={profile.id}
@@ -141,6 +206,7 @@ const Home = () => {
               lastUpdated={profile.lastUpdated}
               metrics={profile.metrics}
               onClick={() => navigate(`/profiles/${profile.id}`)}
+              className="h-full"
             />
           ))}
         </div>
@@ -158,7 +224,7 @@ const Home = () => {
           </button>
         </div>
         
-        <div className="space-y-4 animate-slide-up">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-up">
           {recentMealPlans.map((plan) => (
             <MealPlanCard
               key={plan.id}
@@ -168,6 +234,7 @@ const Home = () => {
               completionRate={plan.completionRate}
               image={plan.image}
               onClick={() => navigate(`/meal-plans/${plan.id}`)}
+              className="h-full"
             />
           ))}
         </div>
