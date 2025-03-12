@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { VolumeUp, Share2, Bookmark, BookmarkCheck, ThumbsUp, SearchIcon } from 'lucide-react';
+import { Volume, Share2, Bookmark, BookmarkCheck, ThumbsUp, SearchIcon } from 'lucide-react';
 import Header from '@/components/Header';
 import { cn } from '@/lib/utils';
 
@@ -57,7 +57,7 @@ const TipCard = ({
             onClick={onPlay}
             className="p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
           >
-            <VolumeUp className="w-5 h-5" />
+            <Volume className="w-5 h-5" />
           </button>
         </div>
         
