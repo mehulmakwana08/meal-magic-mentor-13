@@ -176,11 +176,11 @@ const Tips = () => {
   };
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 md:pb-8">
       <Header title="Nutrition Tips" />
       
       {/* Search */}
-      <div className="px-4 py-4 border-b border-border sticky top-[57px] bg-white/95 backdrop-blur-sm z-10">
+      <div className="px-4 py-4 border-b border-border sticky top-[57px] md:top-[105px] bg-white/95 backdrop-blur-sm z-10">
         <div className="relative mb-4">
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <input
@@ -219,7 +219,7 @@ const Tips = () => {
           {filteredTips.length} Nutrition Tip{filteredTips.length !== 1 ? 's' : ''}
         </h2>
         
-        <div className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredTips.map((tip) => (
             <TipCard
               key={tip.id}
@@ -238,7 +238,7 @@ const Tips = () => {
           ))}
           
           {filteredTips.length === 0 && (
-            <div className="text-center py-8">
+            <div className="text-center py-8 col-span-full">
               <p className="text-muted-foreground">No tips found for this category</p>
             </div>
           )}
