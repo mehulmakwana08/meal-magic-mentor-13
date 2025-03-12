@@ -12,37 +12,40 @@ const navItems = [
   { icon: Lightbulb, label: 'Tips', path: '/tips' },
 ];
 
-const WebNavbar = () => {
+interface WebNavbarProps {
+  className?: string;
+}
+
+const WebNavbar = ({ className }: WebNavbarProps) => {
   const location = useLocation();
   
   return (
-    <nav className="hidden md:flex w-full h-16 bg-white border-b border-border sticky top-0 z-20">
-      <div className="container mx-auto flex items-center justify-between px-4">
-        <div className="flex items-center">
-          <h1 className="text-xl font-bold text-primary mr-8">Anganwadi Nutrition</h1>
-          <div className="flex items-center space-x-1">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              const Icon = item.icon;
-              
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={cn(
-                    "flex items-center px-4 py-2 rounded-md transition-colors",
-                    isActive 
-                      ? "text-primary bg-primary/10" 
-                      : "text-gray-600 hover:bg-gray-100 hover:text-primary"
-                  )}
-                >
-                  <Icon className="w-5 h-5 mr-2" />
-                  <span className="font-medium">{item.label}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
+    <nav className={cn("hidden md:flex w-64 bg-white border-r border-border fixed h-screen flex-col py-6 px-4", className)}>
+      <div className="mb-8">
+        <h1 className="text-xl font-bold text-primary">Anganwadi Nutrition</h1>
+      </div>
+      
+      <div className="flex flex-col space-y-1">
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          const Icon = item.icon;
+          
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={cn(
+                "flex items-center px-4 py-3 rounded-md transition-colors",
+                isActive 
+                  ? "text-primary bg-primary/10" 
+                  : "text-gray-600 hover:bg-gray-100 hover:text-primary"
+              )}
+            >
+              <Icon className="w-5 h-5 mr-3" />
+              <span className="font-medium">{item.label}</span>
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );
