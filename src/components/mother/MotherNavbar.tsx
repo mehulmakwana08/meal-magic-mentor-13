@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Utensils, LineChart, Lightbulb } from 'lucide-react';
+import { Home, Utensils, LineChart, Lightbulb, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -9,6 +9,7 @@ const navItems = [
   { icon: Utensils, label: 'Meal Plans', path: '/meal-plans' },
   { icon: LineChart, label: 'Progress', path: '/progress' },
   { icon: Lightbulb, label: 'Tips', path: '/tips' },
+  { icon: User, label: 'Profile', path: '/profile' },
 ];
 
 interface MotherNavbarProps {
@@ -22,6 +23,7 @@ const MotherNavbar = ({ className }: MotherNavbarProps) => {
     <nav className={cn("hidden md:flex w-64 bg-white border-r border-border fixed h-screen flex-col py-6 px-4", className)}>
       <div className="mb-8">
         <h1 className="text-xl font-bold text-rose-600">Mother's Nutrition</h1>
+        <p className="text-sm text-muted-foreground mt-1">Patient Portal</p>
       </div>
       
       <div className="flex flex-col space-y-1">
