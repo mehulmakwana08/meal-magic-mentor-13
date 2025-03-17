@@ -8,6 +8,7 @@ import BottomNav from "./components/BottomNav";
 import WebNavbar from "./components/WebNavbar";
 import Home from "./pages/Home";
 import Profiles from "./pages/Profiles";
+import AddProfile from "./pages/AddProfile";
 import MealPlans from "./pages/MealPlans";
 import Progress from "./pages/Progress";
 import Tips from "./pages/Tips";
@@ -30,6 +31,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/profiles" element={<Profiles />} />
+              <Route path="/profiles/add" element={<AddProfile />} />
               <Route path="/meal-plans" element={<MealPlans />} />
               <Route path="/progress" element={<Progress />} />
               <Route path="/tips" element={<Tips />} />

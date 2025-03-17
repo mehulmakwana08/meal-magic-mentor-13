@@ -123,7 +123,7 @@ const Profiles = () => {
             icon={PlusCircle}
             color="primary"
             size="sm"
-            onClick={() => {/* Navigate to add profile */}}
+            onClick={() => navigate('/profiles/add')}
           >
             Add New
           </AnimatedButton>
@@ -151,7 +151,7 @@ const Profiles = () => {
                 icon={PlusCircle}
                 color="primary"
                 className="mt-4"
-                onClick={() => {/* Navigate to add profile */}}
+                onClick={() => navigate('/profiles/add')}
               >
                 Add New Profile
               </AnimatedButton>

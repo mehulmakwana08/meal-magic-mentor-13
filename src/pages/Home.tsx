@@ -134,7 +134,7 @@ const Home = () => {
               icon={PlusCircle}
               color="primary"
               size="sm"
-              onClick={() => navigate('/profiles')}
+              onClick={() => navigate('/profiles/add')}
             >
               New Profile
             </AnimatedButton>
