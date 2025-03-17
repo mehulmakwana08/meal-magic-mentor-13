@@ -11,6 +11,8 @@ interface AnimatedButtonProps {
   className?: string;
   fullWidth?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
 }
 
 const AnimatedButton = ({
@@ -21,6 +23,8 @@ const AnimatedButton = ({
   className,
   fullWidth = false,
   size = 'md',
+  type = 'button',
+  disabled = false,
 }: AnimatedButtonProps) => {
   const colorVariants = {
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
@@ -40,7 +44,9 @@ const AnimatedButton = ({
 
   return (
     <button
+      type={type}
       onClick={onClick}
+      disabled={disabled}
       className={cn(
         'flex items-center justify-center gap-2 font-medium rounded-xl transition-all',
         'transform active:scale-[0.98] animate-float',
@@ -48,6 +54,7 @@ const AnimatedButton = ({
         colorVariants[color],
         sizeVariants[size],
         fullWidth && 'w-full',
+        disabled && 'opacity-70 cursor-not-allowed',
         className
       )}
     >
