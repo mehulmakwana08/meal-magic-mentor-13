@@ -1,32 +1,56 @@
 
-import React from 'react';
-import { MenuIcon } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronLeft } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import LanguageSelector from './LanguageSelector';
+import UserProfileDropdown from './UserProfileDropdown';
 
 interface HeaderProps {
   title: string;
-  onMenuClick?: () => void;
+  showBackButton?: boolean;
   className?: string;
 }
 
-const Header = ({ title, onMenuClick, className }: HeaderProps) => {
+const Header = ({ title, showBackButton = false, className }: HeaderProps) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const isHomePage = location.pathname === '/';
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
   return (
-    <header className={cn(
-      "sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-md border-b border-border md:top-16",
-      className
-    )}>
-      <div className="flex items-center gap-3">
-        <button 
-          onClick={onMenuClick}
-          className="p-1.5 rounded-full hover:bg-muted transition-colors md:hidden"
-        >
-          <MenuIcon className="w-5 h-5 text-primary" />
-        </button>
-        <h1 className="text-lg font-semibold text-primary">{title}</h1>
+    <header 
+      className={cn(
+        "sticky top-0 z-30 flex h-[57px] items-center justify-between px-4 bg-white",
+        isScrolled && "shadow-sm border-b border-border",
+        className
+      )}
+    >
+      <div className="flex items-center">
+        {(showBackButton || !isHomePage) && (
+          <button
+            onClick={() => navigate(-1)}
+            className="mr-3 rounded-full p-1 hover:bg-muted"
+            aria-label="Go back"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+        )}
+        <h1 className="text-lg font-semibold truncate">{title}</h1>
       </div>
       
-      <LanguageSelector />
+      <div className="flex items-center gap-2">
+        <UserProfileDropdown />
+      </div>
     </header>
   );
 };
