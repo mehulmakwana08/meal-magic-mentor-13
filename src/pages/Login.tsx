@@ -10,6 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userRole, setUserRole] = useState<'doctor' | 'mother'>('doctor');
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -20,10 +21,15 @@ const Login = () => {
     // Simulate login for demo purposes
     setTimeout(() => {
       setIsLoading(false);
+      
+      // Store user role in localStorage
+      localStorage.setItem('userRole', userRole);
+      
       toast({
         title: "Login successful",
-        description: "Welcome back to NutriTrack!",
+        description: `Welcome back to NutriTrack as a ${userRole}!`,
       });
+      
       navigate('/');
     }, 1500);
   };
@@ -80,6 +86,36 @@ const Login = () => {
                     className="block w-full pl-10 pr-3 py-3 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                     placeholder="••••••••"
                   />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  I am a:
+                </label>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setUserRole('doctor')}
+                    className={`flex-1 py-2 px-4 rounded-lg border border-border transition-colors ${
+                      userRole === 'doctor'
+                        ? 'bg-primary text-white'
+                        : 'bg-background hover:bg-muted'
+                    }`}
+                  >
+                    Doctor/Worker
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUserRole('mother')}
+                    className={`flex-1 py-2 px-4 rounded-lg border border-border transition-colors ${
+                      userRole === 'mother'
+                        ? 'bg-primary text-white'
+                        : 'bg-background hover:bg-muted'
+                    }`}
+                  >
+                    Mother/Patient
+                  </button>
                 </div>
               </div>
             </div>
