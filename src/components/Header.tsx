@@ -13,7 +13,7 @@ interface HeaderProps {
 const Header = ({ title, onMenuClick, className }: HeaderProps) => {
   return (
     <header className={cn(
-      "sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-md border-b border-border md:top-16",
+      " top-0 z-10 flex items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-md border-b border-border md:top-16",
       className
     )}>
       <div className="flex items-center gap-3">
