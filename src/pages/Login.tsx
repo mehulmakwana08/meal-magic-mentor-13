@@ -18,8 +18,9 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Store user role in localStorage
+    // Store user role in localStorage before anything else happens
     localStorage.setItem('userRole', userRole);
+    console.log("User role set to:", userRole);
     
     // Simulate login for demo purposes
     setTimeout(() => {
@@ -35,12 +36,13 @@ const Login = () => {
         const surveyCompleted = localStorage.getItem('motherSurveyCompleted');
         if (!surveyCompleted) {
           // First time login as mother, redirect to survey
+          console.log("First time mother login, redirecting to survey");
           navigate('/mother-survey');
           return;
         }
       }
       
-      // Force a page reload to apply the new role
+      // For all other cases, force a complete page reload to apply the new role
       window.location.href = '/';
     }, 1500);
   };
