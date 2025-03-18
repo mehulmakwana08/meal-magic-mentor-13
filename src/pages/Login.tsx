@@ -30,6 +30,16 @@ const Login = () => {
         description: `Welcome back to NutriTrack as a ${userRole}!`,
       });
       
+      // Check if this is the first login for a mother user
+      if (userRole === 'mother') {
+        const surveyCompleted = localStorage.getItem('motherSurveyCompleted');
+        if (!surveyCompleted) {
+          // First time login as mother, redirect to survey
+          navigate('/mother-survey');
+          return;
+        }
+      }
+      
       // Force a page reload to apply the new role
       window.location.href = '/';
     }, 1500);

@@ -23,6 +23,7 @@ import MotherMealPlans from "./pages/mother/MotherMealPlans";
 import MotherProgress from "./pages/mother/MotherProgress";
 import MotherTips from "./pages/mother/MotherTips";
 import MotherProfile from "./pages/mother/MotherProfile";
+import MotherSurvey from "./pages/mother/MotherSurvey";
 import MotherNavbar from "./components/mother/MotherNavbar";
 import MotherBottomNav from "./components/mother/MotherBottomNav";
 
@@ -73,6 +74,7 @@ const App = () => {
               <main className="flex-1 pb-16 md:pb-0 md:pl-64">
                 <Routes>
                   <Route path="/" element={<MotherHome />} />
+                  <Route path="/mother-survey" element={<MotherSurvey />} />
                   <Route path="/meal-plans" element={<MotherMealPlans />} />
                   <Route path="/progress" element={<MotherProgress />} />
                   <Route path="/tips" element={<MotherTips />} />
