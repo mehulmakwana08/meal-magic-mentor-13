@@ -18,19 +18,20 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     
+    // Store user role in localStorage
+    localStorage.setItem('userRole', userRole);
+    
     // Simulate login for demo purposes
     setTimeout(() => {
       setIsLoading(false);
-      
-      // Store user role in localStorage
-      localStorage.setItem('userRole', userRole);
       
       toast({
         title: "Login successful",
         description: `Welcome back to NutriTrack as a ${userRole}!`,
       });
       
-      navigate('/');
+      // Force a page reload to apply the new role
+      window.location.href = '/';
     }, 1500);
   };
 

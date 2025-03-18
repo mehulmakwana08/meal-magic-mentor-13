@@ -31,6 +31,7 @@ const queryClient = new QueryClient();
 const App = () => {
   // In a real app, this would come from your auth context
   const userRole = localStorage.getItem("userRole") || "doctor";
+  const isLoggedIn = !["/login", "/signup"].includes(window.location.pathname);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -38,7 +39,16 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          {userRole === "doctor" ? (
+          {!isLoggedIn ? (
+            // Login and signup routes without navbar
+            <div className="flex min-h-screen bg-background">
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              </Routes>
+            </div>
+          ) : userRole === "doctor" ? (
             <div className="flex min-h-screen bg-background">
               <WebNavbar className="hidden md:flex" />
               <main className="flex-1 pb-16 md:pb-0 md:pl-64">
