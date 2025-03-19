@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Mail, Key, LogIn } from 'lucide-react';
@@ -57,7 +56,7 @@ const Login = () => {
     <div className="flex flex-col min-h-screen bg-background">
       <Header title="Login" className="md:top-0" />
       
-      <div className="flex-1 flex items-center justify-center px-4 py-10">
+      <div className="flex-1 flex items-center justify-center px-4">
         <div className="w-full max-w-md space-y-8 animate-fade-in">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-primary md:text-3xl">Welcome Back</h1>
