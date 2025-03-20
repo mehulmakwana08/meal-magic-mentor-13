@@ -52,14 +52,6 @@ const Profiles = () => {
       lastUpdated: 'Last week',
       metrics: { weight: '62 kg' },
     },
-    { 
-      id: '6', 
-      name: 'Sanchi Patel', 
-      type: 'pregnant' as ProfileType, 
-      stage: '2 months',
-      lastUpdated: 'Last week',
-      metrics: { weight: '62 kg' },
-    },
   ];
   
   const filteredProfiles = activeFilter === 'all' 

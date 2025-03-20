@@ -16,7 +16,6 @@ interface WebNavbarProps {
   className?: string;
 }
 
-const hideNavbar = location.pathname === '/login';
 const WebNavbar = ({ className }: WebNavbarProps) => {
   const location = useLocation();
   

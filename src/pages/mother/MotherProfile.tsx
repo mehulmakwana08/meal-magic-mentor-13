@@ -42,7 +42,7 @@ const MotherProfile = () => {
       <div className="px-4 py-6">
         <div className="flex flex-col items-center mb-8">
           <div className="h-24 w-24 rounded-full bg-rose-100 flex items-center justify-center mb-4">
-            <User className="h-12 w-12 text-purple-700" />
+            <User className="h-12 w-12 text-rose-600" />
           </div>
           <h1 className="text-xl font-bold">{userData.name}</h1>
           <p className="text-muted-foreground flex items-center">
@@ -91,7 +91,7 @@ const MotherProfile = () => {
             </div>
             
             <div className="flex justify-end">
-              <button className="text-purple-600 text-sm flex items-center gap-1">
+              <button className="text-rose-600 text-sm flex items-center gap-1">
                 <Edit className="h-4 w-4" /> Edit
               </button>
             </div>

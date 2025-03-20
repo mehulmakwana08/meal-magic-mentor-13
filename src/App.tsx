@@ -1,8 +1,9 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
 import WebNavbar from "./components/WebNavbar";
 import Home from "./pages/Home";
@@ -28,16 +29,8 @@ import MotherBottomNav from "./components/mother/MotherBottomNav";
 
 const queryClient = new QueryClient();
 
-<<<<<<< HEAD
-const AppContent = () => {
-  const location = useLocation(); // Get the current route
-  const hideNavbar = location.pathname === "/login" || location.pathname === "/signup"; // Hide navbar on login and signup pages
-
-  // In a real app, this would come from your auth context
-=======
 const App = () => {
   // Get the current user role from localStorage
->>>>>>> 9fc3c3b7dc66f746a566835ab8ced9765f49c18a
   const userRole = localStorage.getItem("userRole") || "doctor";
   
   // Check if user is on login or signup pages
@@ -47,65 +40,11 @@ const App = () => {
   const isLoggedIn = !isAuthPage;
 
   return (
-    <>
-      {userRole === "doctor" ? (
-        <div className="flex min-h-screen bg-background">
-          {/* Conditionally render WebNavbar */}
-          {!hideNavbar && <WebNavbar className="hidden md:flex" />}
-          <main className={`flex-1 pb-16 md:pb-0 ${!hideNavbar ? "md:pl-64" : ""}`}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/profiles" element={<Profiles />} />
-              <Route path="/profiles/add" element={<AddProfile />} />
-              <Route path="/meal-plans" element={<MealPlans />} />
-              <Route path="/progress" element={<Progress />} />
-              <Route path="/tips" element={<Tips />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          {!hideNavbar && <BottomNav />}
-        </div>
-      ) : userRole === "mother" ? (
-        <div className="flex min-h-screen bg-background">
-          <MotherNavbar className="hidden md:flex" />
-          <main className="flex-1 pb-16 md:pb-0 md:pl-64">
-            <Routes>
-              <Route path="/" element={<MotherHome />} />
-              <Route path="/meal-plans" element={<MotherMealPlans />} />
-              <Route path="/progress" element={<MotherProgress />} />
-              <Route path="/tips" element={<MotherTips />} />
-              <Route path="/profile" element={<MotherProfile />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <MotherBottomNav />
-        </div>
-      ) : (
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      )}
-    </>
-  );
-};
-
-const App = () => {
-  return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
-<<<<<<< HEAD
-          <AppContent />
-=======
           {!isLoggedIn ? (
             // Login and signup routes without navbar
             <div className="flex min-h-screen bg-background">
@@ -151,7 +90,6 @@ const App = () => {
               <BottomNav />
             </div>
           )}
->>>>>>> 9fc3c3b7dc66f746a566835ab8ced9765f49c18a
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

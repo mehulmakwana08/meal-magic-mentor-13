@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { PlusCircle, SearchIcon, Filter } from 'lucide-react';
 import Header from '@/components/Header';
@@ -113,7 +114,7 @@ const MealPlans = () => {
           </AnimatedButton>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="space-y-4">
           {filteredPlans.map((plan) => (
             <MealPlanCard
               key={plan.id}
@@ -134,7 +135,7 @@ const MealPlans = () => {
                 icon={PlusCircle}
                 color="primary"
                 className="mt-4"
-                onClick={() => navigate('/meal-plans/create')}
+                onClick={() => {/* Navigate to create meal plan */}}
               >
                 Create New Plan
               </AnimatedButton>

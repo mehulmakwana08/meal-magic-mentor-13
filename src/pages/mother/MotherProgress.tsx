@@ -63,7 +63,7 @@ const MotherProgress = () => {
               <div className="border border-border rounded-lg p-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <Weight className="h-4 w-4 text-purple-600 mr-2" />
+                    <Weight className="h-4 w-4 text-rose-600 mr-2" />
                     <p className="text-sm font-medium">Weight</p>
                   </div>
                   <div className={cn(
@@ -84,7 +84,7 @@ const MotherProgress = () => {
               
               <div className="border border-border rounded-lg p-3">
                 <div className="flex items-center">
-                  <Ruler className="h-4 w-4 text-purple-600 mr-2" />
+                  <Ruler className="h-4 w-4 text-rose-600 mr-2" />
                   <p className="text-sm font-medium">BMI</p>
                 </div>
                 <p className="text-lg font-bold mt-2">{userData.bmi}</p>
@@ -123,7 +123,7 @@ const MotherProgress = () => {
                   size="sm"
                   className={cn(
                     "h-7 text-xs",
-                    period === 'week' ? "bg-rose-50 text-purple-700" : "text-muted-foreground"
+                    period === 'week' ? "bg-rose-50 text-rose-700" : "text-muted-foreground"
                   )}
                   onClick={() => setPeriod('week')}
                 >
@@ -134,7 +134,7 @@ const MotherProgress = () => {
                   size="sm"
                   className={cn(
                     "h-7 text-xs",
-                    period === 'month' ? "bg-purple-50 text-purple-700" : "text-muted-foreground"
+                    period === 'month' ? "bg-rose-50 text-rose-700" : "text-muted-foreground"
                   )}
                   onClick={() => setPeriod('month')}
                 >
@@ -145,7 +145,7 @@ const MotherProgress = () => {
                   size="sm"
                   className={cn(
                     "h-7 text-xs",
-                    period === 'all' ? "bg-purple-50 text-purple-700" : "text-muted-foreground"
+                    period === 'all' ? "bg-rose-50 text-rose-700" : "text-muted-foreground"
                   )}
                   onClick={() => setPeriod('all')}
                 >

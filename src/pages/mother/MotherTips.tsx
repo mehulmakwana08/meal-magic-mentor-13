@@ -110,7 +110,7 @@ const MotherTips = () => {
               size="sm"
               className={cn(
                 "rounded-full text-sm whitespace-nowrap px-3 py-1 h-auto",
-                category.id === 'all' ? "bg-purple-600 text-white hover:bg-purple-700" : "bg-muted hover:bg-muted/80"
+                category.id === 'all' ? "bg-rose-600 text-white hover:bg-rose-700" : "bg-muted hover:bg-muted/80"
               )}
             >
               {category.name}
@@ -140,7 +140,7 @@ const MotherTips = () => {
                         onClick={() => toggleSaved(tip.id)}
                       >
                         {savedTips.includes(tip.id) ? (
-                          <BookmarkCheck className="h-5 w-5 text-purple-600" />
+                          <BookmarkCheck className="h-5 w-5 text-rose-600" />
                         ) : (
                           <Bookmark className="h-5 w-5 text-muted-foreground" />
                         )}
@@ -148,13 +148,13 @@ const MotherTips = () => {
                     </div>
                     <div className="p-4">
                       <div className="flex items-start gap-2 mb-2">
-                        <Lightbulb className="h-5 w-5 text-purple-600 mt-0.5" />
+                        <Lightbulb className="h-5 w-5 text-rose-600 mt-0.5" />
                         <h3 className="font-semibold text-lg">{tip.title}</h3>
                       </div>
                       <p className="text-muted-foreground text-sm mb-3">{tip.description}</p>
                       <div className="flex flex-wrap gap-2">
                         {tip.tags.map(tag => (
-                          <Badge key={tag} variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                          <Badge key={tag} variant="outline" className="bg-rose-50 text-rose-700 border-rose-200">
                             {tag}
                           </Badge>
                         ))}
@@ -192,18 +192,18 @@ const MotherTips = () => {
                           className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm rounded-full h-8 w-8"
                           onClick={() => toggleSaved(tip.id)}
                         >
-                          <BookmarkCheck className="h-5 w-5 text-purple-600" />
+                          <BookmarkCheck className="h-5 w-5 text-rose-600" />
                         </Button>
                       </div>
                       <div className="p-4">
                         <div className="flex items-start gap-2 mb-2">
-                          <Lightbulb className="h-5 w-5 text-purple-600 mt-0.5" />
+                          <Lightbulb className="h-5 w-5 text-rose-600 mt-0.5" />
                           <h3 className="font-semibold text-lg">{tip.title}</h3>
                         </div>
                         <p className="text-muted-foreground text-sm mb-3">{tip.description}</p>
                         <div className="flex flex-wrap gap-2">
                           {tip.tags.map(tag => (
-                            <Badge key={tag} variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                            <Badge key={tag} variant="outline" className="bg-rose-50 text-rose-700 border-rose-200">
                               {tag}
                             </Badge>
                           ))}

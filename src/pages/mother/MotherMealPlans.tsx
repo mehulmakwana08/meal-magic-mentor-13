@@ -101,9 +101,9 @@ const MotherMealPlans = () => {
               className={cn(
                 "flex flex-col items-center justify-center min-w-[3rem] p-2 rounded-lg transition-colors",
                 activeDay === day.id
-                  ? "bg-purple-600 text-white"
+                  ? "bg-rose-600 text-white"
                   : day.isToday
-                  ? "bg-purple-50 text-purple-700"
+                  ? "bg-rose-50 text-rose-700"
                   : "bg-muted text-foreground hover:bg-muted/80"
               )}
             >
@@ -125,7 +125,7 @@ const MotherMealPlans = () => {
                     <div 
                       className={cn(
                         "w-2 h-2 rounded-full",
-                        meal.completed ? "bg-green-500" : "bg-purple-500"
+                        meal.completed ? "bg-green-500" : "bg-rose-500"
                       )}
                     />
                     <p className="text-sm text-muted-foreground">{meal.time}</p>
