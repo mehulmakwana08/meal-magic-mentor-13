@@ -18,7 +18,7 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Store user role in localStorage immediately
+    // Store user role in localStorage before anything else happens
     localStorage.setItem('userRole', userRole);
     console.log("User role set to:", userRole);
     
@@ -39,16 +39,10 @@ const Login = () => {
           console.log("First time mother login, redirecting to survey");
           navigate('/mother-survey');
           return;
-        } else {
-          // Already completed survey, go to mother home
-          console.log("Mother login with completed survey, redirecting to home");
-          window.location.href = '/';
-          return;
         }
       }
       
-      // Doctor role or any other case
-      console.log("Doctor login, redirecting to home");
+      // For all other cases, force a complete page reload to apply the new role
       window.location.href = '/';
     }, 1500);
   };
