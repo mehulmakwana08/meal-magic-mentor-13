@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Volume, Share2, Bookmark, BookmarkCheck, ThumbsUp, SearchIcon } from 'lucide-react';
 import Header from '@/components/Header';
@@ -32,7 +31,7 @@ const TipCard = ({
   onShare,
 }: TipCardProps) => {
   return (
-    <div className="bg-white rounded-xl overflow-hidden card-shadow animate-fade-in">
+    <div className="bg-white rounded-xl overflow-hidden shadow-md animate-fade-in">
       {image && (
         <div className="h-48 overflow-hidden">
           <img src={image} alt={title} className="w-full h-full object-cover" />
@@ -180,7 +179,7 @@ const Tips = () => {
       <Header title="Nutrition Tips" />
       
       {/* Search */}
-      <div className="px-4 py-4 border-b border-border sticky top-[57px] md:top-[105px] bg-white/95 backdrop-blur-sm z-10">
+      <div className="px-4 py-4 border-b border-border sticky top-[57px] md:top-[15px] bg-white/95 backdrop-blur-sm z-10">
         <div className="relative mb-4">
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <input
