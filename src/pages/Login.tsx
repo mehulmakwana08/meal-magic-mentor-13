@@ -30,19 +30,29 @@ const Login = () => {
         description: `Welcome back to NutriTrack as a ${userRole}!`,
       });
       
+      // Check if this is the first login for a mother user
+      if (userRole === 'mother') {
+        const surveyCompleted = localStorage.getItem('motherSurveyCompleted');
+        if (!surveyCompleted) {
+          // First time login as mother, redirect to survey
+          navigate('/mother-survey');
+          return;
+        }
+      }
+      
       // Force a page reload to apply the new role
       window.location.href = '/';
     }, 1500);
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       <Header title="Login" className="md:top-0" />
       
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-10">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-10 md:py-0">
         <div className="w-full max-w-md space-y-8 animate-fade-in">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-primary">Welcome Back</h1>
+            <h1 className="text-2xl font-bold text-primary md:text-3xl">Welcome Back</h1>
             <p className="mt-2 text-muted-foreground">Log in to access your nutrition journey</p>
           </div>
           
