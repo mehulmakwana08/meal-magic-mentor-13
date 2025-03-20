@@ -22,17 +22,29 @@ import MotherMealPlans from "./pages/mother/MotherMealPlans";
 import MotherProgress from "./pages/mother/MotherProgress";
 import MotherTips from "./pages/mother/MotherTips";
 import MotherProfile from "./pages/mother/MotherProfile";
+import MotherSurvey from "./pages/mother/MotherSurvey";
 import MotherNavbar from "./components/mother/MotherNavbar";
 import MotherBottomNav from "./components/mother/MotherBottomNav";
 
 const queryClient = new QueryClient();
 
+<<<<<<< HEAD
 const AppContent = () => {
   const location = useLocation(); // Get the current route
   const hideNavbar = location.pathname === "/login" || location.pathname === "/signup"; // Hide navbar on login and signup pages
 
   // In a real app, this would come from your auth context
+=======
+const App = () => {
+  // Get the current user role from localStorage
+>>>>>>> 9fc3c3b7dc66f746a566835ab8ced9765f49c18a
   const userRole = localStorage.getItem("userRole") || "doctor";
+  
+  // Check if user is on login or signup pages
+  const isAuthPage = ["/login", "/signup"].includes(window.location.pathname);
+  
+  // Consider the user logged in if they're not on an auth page
+  const isLoggedIn = !isAuthPage;
 
   return (
     <>
@@ -91,7 +103,55 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+<<<<<<< HEAD
           <AppContent />
+=======
+          {!isLoggedIn ? (
+            // Login and signup routes without navbar
+            <div className="flex min-h-screen bg-background">
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
+              </Routes>
+            </div>
+          ) : userRole === "mother" ? (
+            // Mother interface
+            <div className="flex min-h-screen bg-background">
+              <MotherNavbar className="hidden md:flex" />
+              <main className="flex-1 pb-16 md:pb-0 md:pl-64">
+                <Routes>
+                  <Route path="/" element={<MotherHome />} />
+                  <Route path="/mother-survey" element={<MotherSurvey />} />
+                  <Route path="/meal-plans" element={<MotherMealPlans />} />
+                  <Route path="/progress" element={<MotherProgress />} />
+                  <Route path="/tips" element={<MotherTips />} />
+                  <Route path="/profile" element={<MotherProfile />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <MotherBottomNav />
+            </div>
+          ) : (
+            // Doctor interface (default)
+            <div className="flex min-h-screen bg-background">
+              <WebNavbar className="hidden md:flex" />
+              <main className="flex-1 pb-16 md:pb-0 md:pl-64">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/profiles" element={<Profiles />} />
+                  <Route path="/profiles/add" element={<AddProfile />} />
+                  <Route path="/meal-plans" element={<MealPlans />} />
+                  <Route path="/progress" element={<Progress />} />
+                  <Route path="/tips" element={<Tips />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <BottomNav />
+            </div>
+          )}
+>>>>>>> 9fc3c3b7dc66f746a566835ab8ced9765f49c18a
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
