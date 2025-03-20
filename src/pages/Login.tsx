@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Mail, Key, LogIn, Send, KeyRound, Lock } from 'lucide-react';
@@ -9,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { authService } from '@/services/authService';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -68,36 +68,60 @@ const Login = () => {
     setResetLoading(true);
     
     try {
-      // For demo purposes we'll just simulate the process
-      setTimeout(() => {
-        if (resetStep === 'email') {
+      let response;
+      if (resetStep === 'email') {
+        response = await authService.sendResetEmail(resetEmail);
+        if (response.success) {
           toast({
             title: "Reset email sent",
             description: `Check your inbox at ${resetEmail} for a reset code.`,
           });
           setResetStep('code');
-        } else if (resetStep === 'code') {
+        } else {
+          toast({
+            title: "Error",
+            description: response.message,
+            variant: "destructive",
+          });
+        }
+      } else if (resetStep === 'code') {
+        response = await authService.verifyResetCode(resetEmail, resetCode);
+        if (response.success) {
           setResetStep('newPassword');
-        } else if (resetStep === 'newPassword') {
+        } else {
+          toast({
+            title: "Error",
+            description: response.message,
+            variant: "destructive",
+          });
+        }
+      } else if (resetStep === 'newPassword') {
+        response = await authService.resetPassword(resetEmail, resetCode, newPassword);
+        if (response.success) {
           toast({
             title: "Password reset successful",
             description: "You can now log in with your new password.",
           });
-          // Close the dialog and reset the form
           setShowForgotPassword(false);
           setResetStep('email');
           setResetEmail('');
           setResetCode('');
           setNewPassword('');
+        } else {
+          toast({
+            title: "Error",
+            description: response.message,
+            variant: "destructive",
+          });
         }
-        setResetLoading(false);
-      }, 1500);
+      }
     } catch (error) {
       toast({
-        title: "Reset failed",
+        title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setResetLoading(false);
     }
   };
@@ -330,7 +354,7 @@ const Login = () => {
                 <button 
                   type="button"
                   onClick={() => setShowForgotPassword(true)}
-                  className="font-medium text-primary hover:text-primary/80"
+                  className="font-medium text-primary hover:text-primary/80 inline-flex items-center"
                 >
                   Forgot password?
                 </button>
