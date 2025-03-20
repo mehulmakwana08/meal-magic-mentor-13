@@ -23,21 +23,15 @@ import MotherMealPlans from "./pages/mother/MotherMealPlans";
 import MotherProgress from "./pages/mother/MotherProgress";
 import MotherTips from "./pages/mother/MotherTips";
 import MotherProfile from "./pages/mother/MotherProfile";
-import MotherSurvey from "./pages/mother/MotherSurvey";
 import MotherNavbar from "./components/mother/MotherNavbar";
 import MotherBottomNav from "./components/mother/MotherBottomNav";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Get the current user role from localStorage
+  // In a real app, this would come from your auth context
   const userRole = localStorage.getItem("userRole") || "doctor";
-  
-  // Check if user is on login or signup pages
-  const isAuthPage = ["/login", "/signup"].includes(window.location.pathname);
-  
-  // Consider the user logged in if they're not on an auth page
-  const isLoggedIn = !isAuthPage;
+  const isLoggedIn = !["/login", "/signup"].includes(window.location.pathname);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -54,25 +48,7 @@ const App = () => {
                 <Route path="*" element={<Navigate to="/login" replace />} />
               </Routes>
             </div>
-          ) : userRole === "mother" ? (
-            // Mother interface
-            <div className="flex min-h-screen bg-background">
-              <MotherNavbar className="hidden md:flex" />
-              <main className="flex-1 pb-16 md:pb-0 md:pl-64">
-                <Routes>
-                  <Route path="/" element={<MotherHome />} />
-                  <Route path="/mother-survey" element={<MotherSurvey />} />
-                  <Route path="/meal-plans" element={<MotherMealPlans />} />
-                  <Route path="/progress" element={<MotherProgress />} />
-                  <Route path="/tips" element={<MotherTips />} />
-                  <Route path="/profile" element={<MotherProfile />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <MotherBottomNav />
-            </div>
-          ) : (
-            // Doctor interface (default)
+          ) : userRole === "doctor" ? (
             <div className="flex min-h-screen bg-background">
               <WebNavbar className="hidden md:flex" />
               <main className="flex-1 pb-16 md:pb-0 md:pl-64">
@@ -84,11 +60,36 @@ const App = () => {
                   <Route path="/progress" element={<Progress />} />
                   <Route path="/tips" element={<Tips />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<SignUp />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>
               <BottomNav />
             </div>
+          ) : userRole === "mother" ? (
+            <div className="flex min-h-screen bg-background">
+              <MotherNavbar className="hidden md:flex" />
+              <main className="flex-1 pb-16 md:pb-0 md:pl-64">
+                <Routes>
+                  <Route path="/" element={<MotherHome />} />
+                  <Route path="/meal-plans" element={<MotherMealPlans />} />
+                  <Route path="/progress" element={<MotherProgress />} />
+                  <Route path="/tips" element={<MotherTips />} />
+                  <Route path="/profile" element={<MotherProfile />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <MotherBottomNav />
+            </div>
+          ) : (
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
           )}
         </BrowserRouter>
       </TooltipProvider>

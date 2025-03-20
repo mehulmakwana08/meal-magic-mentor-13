@@ -30,13 +30,13 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen">
       <Header title="Create Account" className="md:top-0" />
       
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-10 md:py-0">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-10">
         <div className="w-full max-w-md space-y-8 animate-fade-in">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-primary md:text-3xl">Join NutriTrack</h1>
+            <h1 className="text-2xl font-bold text-primary">Join NutriTrack</h1>
             <p className="mt-2 text-muted-foreground">Create an account to start your nutrition journey</p>
           </div>
           
