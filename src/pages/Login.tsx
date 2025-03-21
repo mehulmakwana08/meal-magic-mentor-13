@@ -1,17 +1,27 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Mail, Key, LogIn } from 'lucide-react';
+import { ArrowRight, Mail, Key, LogIn, Send, KeyRound, Lock } from 'lucide-react';
 import Header from '@/components/Header';
 import AnimatedButton from '@/components/AnimatedButton';
 import { useToast } from '@/hooks/use-toast';
-import ForgotPassword from '@/components/ForgotPassword';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userRole, setUserRole] = useState<'doctor' | 'mother'>('doctor');
+  const [resetEmail, setResetEmail] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetStep, setResetStep] = useState<'email' | 'code' | 'newPassword'>('email');
+  const [resetCode, setResetCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+  
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -54,12 +64,175 @@ const Login = () => {
     }, 1500);
   };
 
+  const handleResetPassword = async () => {
+    setResetLoading(true);
+    
+    try {
+      // For demo purposes we'll just simulate the process
+      setTimeout(() => {
+        if (resetStep === 'email') {
+          toast({
+            title: "Reset email sent",
+            description: `Check your inbox at ${resetEmail} for a reset code.`,
+          });
+          setResetStep('code');
+        } else if (resetStep === 'code') {
+          setResetStep('newPassword');
+        } else if (resetStep === 'newPassword') {
+          toast({
+            title: "Password reset successful",
+            description: "You can now log in with your new password.",
+          });
+          // Close the dialog and reset the form
+          setShowForgotPassword(false);
+          setResetStep('email');
+          setResetEmail('');
+          setResetCode('');
+          setNewPassword('');
+        }
+        setResetLoading(false);
+      }, 1500);
+    } catch (error) {
+      toast({
+        title: "Reset failed",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+      setResetLoading(false);
+    }
+  };
+
+  const resetPasswordContent = () => {
+    switch (resetStep) {
+      case 'email':
+        return (
+          <div className="space-y-4">
+            <p className="text-muted-foreground text-sm">
+              Enter your email address and we'll send you a code to reset your password.
+            </p>
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <Input
+                  type="email"
+                  placeholder="Your email address"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+            <Button 
+              onClick={handleResetPassword} 
+              disabled={resetLoading || !resetEmail} 
+              className="w-full"
+            >
+              {resetLoading ? "Sending..." : "Send Reset Code"}
+              <Send className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        );
+      
+      case 'code':
+        return (
+          <div className="space-y-4">
+            <p className="text-muted-foreground text-sm">
+              Enter the 6-digit code sent to your email.
+            </p>
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <KeyRound className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <Input
+                  type="text"
+                  placeholder="6-digit code"
+                  value={resetCode}
+                  onChange={(e) => setResetCode(e.target.value)}
+                  className="pl-10"
+                  required
+                  maxLength={6}
+                />
+              </div>
+            </div>
+            <Button 
+              onClick={handleResetPassword} 
+              disabled={resetLoading || resetCode.length < 6} 
+              className="w-full"
+            >
+              {resetLoading ? "Verifying..." : "Verify Code"}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setResetStep('email');
+                  setResetCode('');
+                }}
+                className="text-primary text-sm hover:underline"
+              >
+                Back to email
+              </button>
+            </div>
+          </div>
+        );
+      
+      case 'newPassword':
+        return (
+          <div className="space-y-4">
+            <p className="text-muted-foreground text-sm">
+              Create a new password for your account.
+            </p>
+            <div>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <Input
+                  type="password"
+                  placeholder="New password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+            <Button 
+              onClick={handleResetPassword} 
+              disabled={resetLoading || newPassword.length < 6} 
+              className="w-full"
+            >
+              {resetLoading ? "Updating..." : "Reset Password"}
+              <Key className="ml-2 h-4 w-4" />
+            </Button>
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setResetStep('code');
+                  setNewPassword('');
+                }}
+                className="text-primary text-sm hover:underline"
+              >
+                Back to code verification
+              </button>
+            </div>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header title="Login" className="md:top-0" />
       
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-10 md:py-0">
-        <div className="w-full max-w-md space-y-8 animate-fade-in">
+      <div className="flex-1 flex items-center justify-center p-4 md:p-8 mx-auto max-w-7xl">
+        <div className="w-full max-w-md space-y-8 animate-fade-in bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-primary md:text-3xl">Welcome Back</h1>
             <p className="mt-2 text-muted-foreground">Log in to access your nutrition journey</p>
@@ -154,7 +327,13 @@ const Login = () => {
               </div>
 
               <div className="text-sm">
-                <ForgotPassword />
+                <button 
+                  type="button"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="font-medium text-primary hover:text-primary/80"
+                >
+                  Forgot password?
+                </button>
               </div>
             </div>
 
@@ -183,6 +362,40 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      {/* Forgot Password Dialog */}
+      <Dialog open={showForgotPassword} onOpenChange={setShowForgotPassword}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reset your password</DialogTitle>
+            <DialogDescription>
+              Follow the steps to reset your password and regain access to your account.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Card className="border-0 shadow-none">
+            <CardContent className="p-0 pt-4">
+              {resetPasswordContent()}
+            </CardContent>
+          </Card>
+          
+          <DialogFooter className="sm:justify-start">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setShowForgotPassword(false);
+                setResetStep('email');
+                setResetEmail('');
+                setResetCode('');
+                setNewPassword('');
+              }}
+            >
+              Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
