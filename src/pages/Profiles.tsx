@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { PlusCircle, SearchIcon, Filter, Baby, Heart, Calendar } from 'lucide-react';
+import { PlusCircle, Search, Filter, Baby, Heart, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
 import ProfileCard, { ProfileType } from '@/components/ProfileCard';
 import AnimatedButton from '@/components/AnimatedButton';
@@ -83,7 +82,7 @@ const Profiles = () => {
       <div className="px-4 py-4 border-b border-border sticky top-[57px] bg-white/95 backdrop-blur-sm z-10">
         <div className="flex gap-2 mb-4">
           <div className="relative flex-1">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <input
               type="text"
               placeholder="Search profiles..."

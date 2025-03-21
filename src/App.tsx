@@ -7,6 +7,7 @@ import BottomNav from "./components/BottomNav";
 import WebNavbar from "./components/WebNavbar";
 import Home from "./pages/Home";
 import Profiles from "./pages/Profiles";
+import ProfileDetail from "./pages/ProfileDetail";
 import AddProfile from "./pages/AddProfile";
 import MealPlans from "./pages/MealPlans";
 import Progress from "./pages/Progress";
@@ -44,6 +45,7 @@ const AppContent = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/profiles" element={<Profiles />} />
+              <Route path="/profiles/:id" element={<ProfileDetail />} />
               <Route path="/profiles/add" element={<AddProfile />} />
               <Route path="/meal-plans" element={<MealPlans />} />
               <Route path="/progress" element={<Progress />} />
