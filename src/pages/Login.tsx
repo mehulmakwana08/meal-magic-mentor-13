@@ -5,6 +5,7 @@ import { ArrowRight, Mail, Key, LogIn } from 'lucide-react';
 import Header from '@/components/Header';
 import AnimatedButton from '@/components/AnimatedButton';
 import { useToast } from '@/hooks/use-toast';
+import ForgotPassword from '@/components/ForgotPassword';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -153,9 +154,7 @@ const Login = () => {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-primary hover:text-primary/80">
-                  Forgot password?
-                </a>
+                <ForgotPassword />
               </div>
             </div>
 
