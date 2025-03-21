@@ -1,8 +1,8 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Volume, Share2, Bookmark, BookmarkCheck, ThumbsUp, Search } from 'lucide-react';
 import Header from '@/components/Header';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TipCardProps {
   title: string;
@@ -32,17 +32,17 @@ const TipCard = ({
   onShare,
 }: TipCardProps) => {
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-md animate-fade-in">
+    <div className="bg-white rounded-xl overflow-hidden shadow-md animate-fade-in h-full flex flex-col">
       {image && (
-        <div className="h-48 overflow-hidden">
+        <div className="h-40 sm:h-48 overflow-hidden">
           <img src={image} alt={title} className="w-full h-full object-cover" />
         </div>
       )}
       
-      <div className="p-4">
+      <div className="p-3 sm:p-4 flex-1 flex flex-col">
         <div className="flex justify-between items-start">
           <div>
-            <div className="flex gap-2 mb-2">
+            <div className="flex flex-wrap gap-1 sm:gap-2 mb-2">
               <span className="text-xs font-medium px-2 py-0.5 bg-primary/10 text-primary rounded-full">
                 {category}
               </span>
@@ -50,45 +50,45 @@ const TipCard = ({
                 {language}
               </span>
             </div>
-            <h3 className="font-semibold text-lg">{title}</h3>
+            <h3 className="font-semibold text-sm sm:text-lg line-clamp-2">{title}</h3>
           </div>
           
           <button 
             onClick={onPlay}
-            className="p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+            className="p-1.5 sm:p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex-shrink-0"
           >
-            <Volume className="w-5 h-5" />
+            <Volume className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
         
-        <p className="mt-2 text-muted-foreground text-sm line-clamp-3">
+        <p className="mt-2 text-muted-foreground text-xs sm:text-sm line-clamp-3 flex-1">
           {description}
         </p>
         
-        <div className="mt-4 pt-2 border-t border-border flex items-center justify-between">
+        <div className="mt-3 pt-2 border-t border-border flex items-center justify-between">
           <div className="flex space-x-1">
             <button 
               onClick={onLike}
-              className="p-1.5 rounded-full hover:bg-muted transition-colors flex items-center gap-1"
+              className="p-1 sm:p-1.5 rounded-full hover:bg-muted transition-colors flex items-center gap-1"
             >
-              <ThumbsUp className="w-4 h-4 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">{likes}</span>
+              <ThumbsUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
+              <span className="text-[10px] sm:text-xs text-muted-foreground">{likes}</span>
             </button>
             <button 
               onClick={onSave}
-              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              className="p-1 sm:p-1.5 rounded-full hover:bg-muted transition-colors"
             >
               {isSaved ? (
-                <BookmarkCheck className="w-4 h-4 text-primary" />
+                <BookmarkCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
               ) : (
-                <Bookmark className="w-4 h-4 text-muted-foreground" />
+                <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
               )}
             </button>
             <button 
               onClick={onShare}
-              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              className="p-1 sm:p-1.5 rounded-full hover:bg-muted transition-colors"
             >
-              <Share2 className="w-4 h-4 text-muted-foreground" />
+              <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
             </button>
           </div>
         </div>
@@ -98,8 +98,10 @@ const TipCard = ({
 };
 
 const Tips = () => {
-  const [activeCategory, setActiveCategory] = React.useState<string>('all');
-  const [savedTips, setSavedTips] = React.useState<Set<string>>(new Set());
+  const isMobile = useIsMobile();
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [savedTips, setSavedTips] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Mock data
   const categories = [
@@ -159,9 +161,14 @@ const Tips = () => {
     },
   ];
   
-  const filteredTips = activeCategory === 'all'
-    ? tips
-    : tips.filter(tip => tip.category === activeCategory);
+  const filteredTips = tips.filter(tip => {
+    const matchesCategory = activeCategory === 'all' || tip.category === activeCategory;
+    const matchesSearch = !searchQuery.trim() || 
+      tip.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tip.description.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesCategory && matchesSearch;
+  });
     
   const toggleSaved = (id: string) => {
     setSavedTips(prev => {
@@ -179,19 +186,21 @@ const Tips = () => {
     <div className="min-h-screen pb-20 md:pb-8">
       <Header title="Nutrition Tips" />
       
-      {/* Search */}
-      <div className="px-4 py-4 border-b border-border sticky top-[57px] md:top-[15px] bg-white/95 backdrop-blur-sm z-10">
-        <div className="relative mb-4">
+      {/* Search and categories */}
+      <div className="px-3 sm:px-4 py-3 sm:py-4 border-b border-border sticky top-[57px] md:top-[15px] bg-white/95 backdrop-blur-sm z-10">
+        <div className="relative mb-3 sm:mb-4">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <input
             type="text"
             placeholder="Search nutrition tips..."
             className="w-full pl-9 pr-4 py-2 rounded-xl border border-border bg-background focus:outline-none focus:ring-1 focus:ring-primary text-sm"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         
         {/* Category filters */}
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+        <div className="flex gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1">
           {categories.map((category) => {
             const isActive = activeCategory === category;
             
@@ -200,7 +209,7 @@ const Tips = () => {
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 className={cn(
-                  "px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors",
+                  "px-2.5 sm:px-3 py-1.5 rounded-full text-xs sm:text-sm whitespace-nowrap transition-colors",
                   isActive 
                     ? 'bg-primary text-white' 
                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
@@ -214,12 +223,12 @@ const Tips = () => {
       </div>
       
       {/* Tips List */}
-      <div className="px-4 py-4">
-        <h2 className="text-lg font-semibold mb-4">
+      <div className="px-3 sm:px-4 py-3 sm:py-4">
+        <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
           {filteredTips.length} Nutrition Tip{filteredTips.length !== 1 ? 's' : ''}
         </h2>
         
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {filteredTips.map((tip) => (
             <TipCard
               key={tip.id}
@@ -240,6 +249,14 @@ const Tips = () => {
           {filteredTips.length === 0 && (
             <div className="text-center py-8 col-span-full">
               <p className="text-muted-foreground">No tips found for this category</p>
+              {searchQuery && (
+                <button 
+                  className="mt-2 text-sm text-primary hover:underline"
+                  onClick={() => setSearchQuery('')}
+                >
+                  Clear search
+                </button>
+              )}
             </div>
           )}
         </div>
