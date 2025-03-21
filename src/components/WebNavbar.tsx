@@ -16,9 +16,14 @@ interface WebNavbarProps {
   className?: string;
 }
 
-const hideNavbar = location.pathname === '/login';
 const WebNavbar = ({ className }: WebNavbarProps) => {
   const location = useLocation();
+  
+  // Hide navbar on authentication routes
+  const hideNavbarRoutes = ['/login', '/signup', '/forgot-password'];
+  if (hideNavbarRoutes.includes(location.pathname)) {
+    return null;
+  }
   
   return (
     <nav className={cn("hidden md:flex w-64 bg-white border-r border-border fixed h-screen flex-col py-6 px-4", className)}>
