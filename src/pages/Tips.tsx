@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Volume, Share2, Bookmark, BookmarkCheck, ThumbsUp, SearchIcon } from 'lucide-react';
+import { Volume, Share2, Bookmark, BookmarkCheck, ThumbsUp, Search } from 'lucide-react';
 import Header from '@/components/Header';
 import { cn } from '@/lib/utils';
 
@@ -182,7 +182,7 @@ const Tips = () => {
       {/* Search */}
       <div className="px-4 py-4 border-b border-border sticky top-[57px] md:top-[15px] bg-white/95 backdrop-blur-sm z-10">
         <div className="relative mb-4">
-          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <input
             type="text"
             placeholder="Search nutrition tips..."

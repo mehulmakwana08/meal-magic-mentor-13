@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { PlusCircle, SearchIcon } from 'lucide-react';
+import { PlusCircle, Search } from 'lucide-react';
 import Header from '@/components/Header';
 import MealPlanCard from '@/components/MealPlanCard';
 import AnimatedButton from '@/components/AnimatedButton';
@@ -16,7 +15,6 @@ const MealPlans = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
   
-  // Mock data
   const [mealPlans, setMealPlans] = useState([
     {
       id: '1',
@@ -56,23 +54,19 @@ const MealPlans = () => {
     },
   ]);
   
-  // Filter plans based on active filter and search query
   const getFilteredPlans = () => {
     let filtered = mealPlans;
     
-    // Apply status filter
     if (activeFilter === 'active' || activeFilter === 'completed') {
       filtered = filtered.filter(plan => plan.status === activeFilter);
     }
     
-    // Apply time-based filter
     if (activeFilter === 'this-week') {
       filtered = filtered.filter(plan => plan.period === 'This Week');
     } else if (activeFilter === 'last-week') {
       filtered = filtered.filter(plan => plan.period === 'Last Week');
     }
     
-    // Apply search filter if search query exists
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -111,11 +105,10 @@ const MealPlans = () => {
     <div className="min-h-screen pb-20">
       <Header title="Meal Plans" />
       
-      {/* Search & Filter */}
       <div className="px-4 py-4 border-b border-border sticky top-[57px] bg-white/95 backdrop-blur-sm z-10">
         <div className="flex gap-2 mb-4">
           <div className="relative flex-1">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <input
               type="text"
               placeholder="Search meal plans..."
@@ -131,7 +124,6 @@ const MealPlans = () => {
           />
         </div>
         
-        {/* Status quick filters */}
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
           {['all', 'active', 'completed'].map((filter) => {
             const isActive = activeFilter === filter;
@@ -153,7 +145,6 @@ const MealPlans = () => {
         </div>
       </div>
       
-      {/* Meal Plan List */}
       <div className="px-4 py-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">
@@ -200,7 +191,6 @@ const MealPlans = () => {
         </div>
       </div>
       
-      {/* Create Meal Plan Dialog */}
       <CreateMealPlan
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}

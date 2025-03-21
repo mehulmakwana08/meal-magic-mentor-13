@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, Search, Filter, CheckCircle, PlusCircle } from 'lucide-react';
 import Header from '@/components/Header';
@@ -17,7 +16,6 @@ const MotherMealPlans = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
   
-  // Sample data - in a real app this would come from an API
   const weekDays = [
     { id: 0, name: "Mon", date: "12", isToday: true },
     { id: 1, name: "Tue", date: "13", isToday: false },
@@ -73,18 +71,15 @@ const MotherMealPlans = () => {
   
   const [meals, setMeals] = useState(mealPlans);
   
-  // Filter meals based on active filter and search query
   const getFilteredMeals = () => {
     let filtered = meals;
     
-    // Apply status filter
     if (activeFilter === 'active') {
       filtered = filtered.filter(meal => !meal.completed);
     } else if (activeFilter === 'completed') {
       filtered = filtered.filter(meal => meal.completed);
     }
     
-    // Apply search filter if search query exists
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -108,7 +103,7 @@ const MotherMealPlans = () => {
   const handleCreateMeal = (data: any) => {
     const newMeal = {
       id: meals.length + 1,
-      time: "12:00 PM", // Default time
+      time: "12:00 PM",
       name: data.title,
       description: data.description || "No description provided",
       nutrients: { calories: 0, protein: "0g", iron: "0mg", calcium: "0mg" },
@@ -126,7 +121,6 @@ const MotherMealPlans = () => {
     <div className="min-h-screen pb-20">
       <Header title="Meal Plans" />
       
-      {/* Date Selector */}
       <div className="px-4 py-4 border-b border-border sticky top-[57px] bg-white/95 backdrop-blur-sm z-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-semibold flex items-center">
@@ -165,7 +159,7 @@ const MotherMealPlans = () => {
         
         <div className="mb-4">
           <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <input
               id="meal-search"
               type="text"
@@ -198,7 +192,6 @@ const MotherMealPlans = () => {
         </div>
       </div>
       
-      {/* Meal List */}
       <div className="px-4 py-4">
         {filteredMeals.length === 0 ? (
           <div className="text-center py-8">
@@ -271,7 +264,6 @@ const MotherMealPlans = () => {
         )}
       </div>
       
-      {/* Create Meal Dialog */}
       <CreateMealPlan
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
