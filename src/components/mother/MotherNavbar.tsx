@@ -22,7 +22,7 @@ const MotherNavbar = ({ className }: MotherNavbarProps) => {
   return (
     <nav className={cn("hidden md:flex w-64 bg-white border-r border-border fixed h-screen flex-col py-6 px-4", className)}>
       <div className="mb-8">
-        <h1 className="text-xl font-bold text-rose-600">Mother's Nutrition</h1>
+        <h1 className="text-xl font-bold text-purple-600">Mother's Nutrition</h1>
         <p className="text-sm text-muted-foreground mt-1">Patient Portal</p>
       </div>
       
@@ -38,8 +38,8 @@ const MotherNavbar = ({ className }: MotherNavbarProps) => {
               className={cn(
                 "flex items-center px-4 py-3 rounded-md transition-colors",
                 isActive 
-                  ? "text-rose-600 bg-rose-50" 
-                  : "text-gray-600 hover:bg-gray-100 hover:text-rose-600"
+                  ? "text-purple-600 bg-purple-50" 
+                  : "text-gray-600 hover:bg-gray-100 hover:text-purple-600"
               )}
             >
               <Icon className="w-5 h-5 mr-3" />

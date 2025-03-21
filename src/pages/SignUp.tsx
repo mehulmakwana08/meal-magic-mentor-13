@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Key, User, UserPlus } from 'lucide-react';
-import Header from '@/components/Header';
 import AnimatedButton from '@/components/AnimatedButton';
 import { useToast } from '@/hooks/use-toast';
 
@@ -31,7 +30,6 @@ const SignUp = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Header title="Create Account" className="md:top-0" />
       
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-10 md:py-0">
         <div className="w-full max-w-md space-y-8 animate-fade-in">

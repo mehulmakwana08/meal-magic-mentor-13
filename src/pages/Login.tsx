@@ -229,7 +229,6 @@ const Login = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Header title="Login" className="md:top-0" />
       
       <div className="flex-1 flex items-center justify-center p-4 md:p-8 mx-auto max-w-7xl">
         <div className="w-full max-w-md space-y-8 animate-fade-in bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md">

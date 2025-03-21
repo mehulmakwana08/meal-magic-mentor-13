@@ -7,6 +7,10 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
+//Calender
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 const MotherHome = () => {
   const navigate = useNavigate();
   
@@ -46,17 +50,17 @@ const MotherHome = () => {
       <div className="px-4 py-4">
         <div className="space-y-6">
           {/* Pregnancy / Lactation Stage */}
-          <Card className="p-4 bg-rose-50 border-rose-100">
+          <Card className="p-4 bg-blue-50 border-purple-100">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-sm text-rose-700 font-medium">
+                <p className="text-sm text-purple-700 font-medium">
                   {userData.type === 'pregnant' ? 'Pregnancy Week' : 'Lactation Month'}
                 </p>
-                <h3 className="text-2xl font-bold text-rose-700">
+                <h3 className="text-2xl font-bold text-purple-700">
                   Week {userData.weekNumber}
                 </h3>
               </div>
-              <Calendar className="h-8 w-8 text-rose-500" />
+              <Calendar className="h-8 w-8 text-purple-700" />
             </div>
           </Card>
           
@@ -67,7 +71,7 @@ const MotherHome = () => {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-rose-600 p-0 h-auto hover:bg-transparent hover:text-rose-700"
+                className="text-purple-700 p-0 h-auto hover:bg-transparent hover:text-purple-700"
                 onClick={() => {}}
               >
                 <span className="text-sm">Reschedule</span>
@@ -85,7 +89,7 @@ const MotherHome = () => {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-rose-600 p-0 h-auto hover:bg-transparent hover:text-rose-700 flex items-center"
+                className="text-purple-700 p-0 h-auto hover:bg-transparent hover:text-purple-700 flex items-center"
                 onClick={() => navigate('/meal-plans')}
               >
                 <span className="text-sm">All meals</span>
@@ -101,7 +105,7 @@ const MotherHome = () => {
                       <div 
                         className={cn(
                           "w-3 h-3 rounded-full mr-3",
-                          meal.completed ? "bg-green-500" : "bg-rose-500"
+                          meal.completed ? "bg-green-500" : "bg-purple-500"
                         )}
                       />
                       <div>
@@ -113,8 +117,8 @@ const MotherHome = () => {
                       variant="outline"
                       size="sm"
                       className={cn(
-                        "text-xs border-rose-200",
-                        meal.completed ? "bg-green-50 text-green-700" : "bg-rose-50 text-rose-700"
+                        "text-xs border-purple-200",
+                        meal.completed ? "bg-green-50 text-green-700" : "bg-purple-50 text-purple-700"
                       )}
                     >
                       {meal.completed ? "Completed" : "Pending"}
@@ -141,7 +145,7 @@ const MotherHome = () => {
                 onClick={() => navigate('/progress')}
               >
                 <div className="flex flex-col items-center text-center">
-                  <LineChart className="h-6 w-6 text-rose-600 mb-2" />
+                  <LineChart className="h-6 w-6 text-purple-700 mb-2" />
                   <p className="font-medium">Track Progress</p>
                 </div>
               </Card>
@@ -151,7 +155,7 @@ const MotherHome = () => {
                 onClick={() => navigate('/tips')}
               >
                 <div className="flex flex-col items-center text-center">
-                  <Bookmark className="h-6 w-6 text-rose-600 mb-2" />
+                  <Bookmark className="h-6 w-6 text-purple-700 mb-2" />
                   <p className="font-medium">Nutrition Tips</p>
                 </div>
               </Card>

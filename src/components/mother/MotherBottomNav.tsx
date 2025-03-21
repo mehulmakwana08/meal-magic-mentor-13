@@ -32,8 +32,8 @@ const MotherBottomNav = () => {
                 className={cn(
                   "flex flex-col items-center justify-center transition-all",
                   isActive 
-                    ? "text-rose-600 scale-105" 
-                    : "text-gray-500 hover:text-rose-500"
+                    ? "text-purple-600 scale-105" 
+                    : "text-gray-500 hover:text-purple-500"
                 )}
               >
                 <Icon 

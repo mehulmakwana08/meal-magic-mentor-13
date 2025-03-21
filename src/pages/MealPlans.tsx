@@ -114,7 +114,7 @@ const MealPlans = () => {
           </AnimatedButton>
         </div>
         
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredPlans.map((plan) => (
             <MealPlanCard
               key={plan.id}
@@ -135,7 +135,7 @@ const MealPlans = () => {
                 icon={PlusCircle}
                 color="primary"
                 className="mt-4"
-                onClick={() => {/* Navigate to create meal plan */}}
+                onClick={() => navigate('/meal-plans/create')}
               >
                 Create New Plan
               </AnimatedButton>
