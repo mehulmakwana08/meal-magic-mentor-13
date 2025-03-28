@@ -23,6 +23,7 @@ import MotherMealPlans from "./pages/mother/MotherMealPlans";
 import MotherProgress from "./pages/mother/MotherProgress";
 import MotherTips from "./pages/mother/MotherTips";
 import MotherProfile from "./pages/mother/MotherProfile";
+import MotherSurvey from "./pages/mother/MotherSurvey";
 import MotherNavbar from "./components/mother/MotherNavbar";
 import MotherBottomNav from "./components/mother/MotherBottomNav";
 
@@ -87,6 +88,7 @@ const AppContent = () => {
               <Route path="/meal-plans" element={<MotherMealPlans />} />
               <Route path="/progress" element={<MotherProgress />} />
               <Route path="/tips" element={<MotherTips />} />
+              <Route path="/mother-survey" element={<MotherSurvey />} />
               <Route path="/profile" element={<MotherProfile />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
