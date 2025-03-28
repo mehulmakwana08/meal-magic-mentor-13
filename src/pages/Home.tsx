@@ -9,8 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [isSpeaking, setIsSpeaking] = React.useState(false);
-  
   // Mock data
   const recentProfiles = [
     { 
@@ -114,11 +112,6 @@ const Home = () => {
     },
   ];
 
-  const toggleSpeech = () => {
-    setIsSpeaking(!isSpeaking);
-    // In a real app, this would trigger voice readout of the page content
-  };
-
   return (
     <div className="min-h-screen pb-20">
       <Header title="Anganwadi Nutrition" />
@@ -138,17 +131,6 @@ const Home = () => {
             >
               New Profile
             </AnimatedButton>
-            
-            <button 
-              onClick={toggleSpeech}
-              className="p-2 bg-white rounded-full shadow-sm border border-border"
-            >
-              {isSpeaking ? (
-                <VolumeX className="w-5 h-5 text-gray-600" />
-              ) : (
-                <Volume2 className="w-5 h-5 text-gray-600" />
-              )}
-            </button>
           </div>
         </div>
       </div>

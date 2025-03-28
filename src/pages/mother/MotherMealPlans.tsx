@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
-import { Calendar, Search, Filter, CheckCircle, PlusCircle } from 'lucide-react';
+import { Calendar, Search, Filter, CheckCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import CreateMealPlan from '@/components/CreateMealPlan';
 import MealPlanFilter, { FilterOption } from '@/components/MealPlanFilter';
 import { useToast } from '@/hooks/use-toast';
-import AnimatedButton from '@/components/AnimatedButton';
 
 const MotherMealPlans = () => {
   const [activeDay, setActiveDay] = useState(0);
   const [activeFilter, setActiveFilter] = useState<FilterOption>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
   
   const weekDays = [
@@ -100,23 +97,6 @@ const MotherMealPlans = () => {
     ));
   };
   
-  const handleCreateMeal = (data: any) => {
-    const newMeal = {
-      id: meals.length + 1,
-      time: "12:00 PM",
-      name: data.title,
-      description: data.description || "No description provided",
-      nutrients: { calories: 0, protein: "0g", iron: "0mg", calcium: "0mg" },
-      completed: false,
-    };
-    
-    setMeals([...meals, newMeal]);
-    toast({
-      title: "Success!",
-      description: "New meal has been added to your plan.",
-    });
-  };
-  
   return (
     <div className="min-h-screen pb-20">
       <Header title="Meal Plans" />
@@ -129,27 +109,6 @@ const MotherMealPlans = () => {
           </h2>
           
           <div className="flex gap-2">
-            <Button 
-              size="sm" 
-              variant="ghost" 
-              className="border border-border h-8 w-8 p-0"
-              onClick={() => setIsCreateDialogOpen(true)}
-            >
-              <PlusCircle className="h-4 w-4" />
-            </Button>
-            <Button 
-              size="sm" 
-              variant="ghost" 
-              className="border border-border h-8 w-8 p-0"
-              onClick={() => {
-                const searchInput = document.getElementById('meal-search') as HTMLInputElement;
-                if (searchInput) {
-                  searchInput.focus();
-                }
-              }}
-            >
-              <Search className="h-4 w-4" />
-            </Button>
             <MealPlanFilter
               activeFilter={activeFilter}
               onFilterChange={setActiveFilter}
@@ -196,14 +155,6 @@ const MotherMealPlans = () => {
         {filteredMeals.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-muted-foreground">No meals found</p>
-            <AnimatedButton
-              icon={PlusCircle}
-              color="primary"
-              className="mt-4"
-              onClick={() => setIsCreateDialogOpen(true)}
-            >
-              Add New Meal
-            </AnimatedButton>
           </div>
         ) : (
           <div className="space-y-4">
@@ -263,12 +214,6 @@ const MotherMealPlans = () => {
           </div>
         )}
       </div>
-      
-      <CreateMealPlan
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        onSubmit={handleCreateMeal}
-      />
     </div>
   );
 };

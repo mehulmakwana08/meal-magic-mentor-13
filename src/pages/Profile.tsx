@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { User, Mail, Briefcase, Phone, Edit, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   // In a real application, this would come from your auth context
   const userData = {
     name: "Ayushi Sharma",
@@ -32,7 +31,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen pb-20">
       <Header title="Profile" showBackButton />
-      
+
       <div className="px-4 py-6">
         <div className="flex flex-col items-center mb-8">
           <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center mb-4">
@@ -41,11 +40,11 @@ const Profile = () => {
           <h1 className="text-xl font-bold">{userData.name}</h1>
           <p className="text-muted-foreground">{userData.role}</p>
         </div>
-        
+
         <div className="space-y-6">
           <div className="bg-white rounded-xl border border-border p-4 space-y-4">
             <h2 className="font-semibold text-lg">Personal Information</h2>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-muted-foreground" />
@@ -54,7 +53,7 @@ const Profile = () => {
                   <p className="font-medium">{userData.email}</p>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-muted-foreground" />
                 <div>
@@ -63,17 +62,17 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="flex justify-end">
               <button className="text-primary text-sm flex items-center gap-1">
                 <Edit className="h-4 w-4" /> Edit
               </button>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl border border-border p-4 space-y-4">
             <h2 className="font-semibold text-lg">Work Information</h2>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <Briefcase className="h-5 w-5 text-muted-foreground" />
@@ -82,7 +81,7 @@ const Profile = () => {
                   <p className="font-medium">{userData.center}</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-3">
                 <User className="h-5 w-5 text-muted-foreground" />
                 <div>
@@ -92,16 +91,17 @@ const Profile = () => {
               </div>
             </div>
           </div>
-          
-          <AnimatedButton
-            onClick={handleLogout}
-            icon={LogOut}
-            color="rose"
-            fullWidth
-            size="md"
-          >
-            Log Out
-          </AnimatedButton>
+
+          <div className="flex justify-center">
+            <AnimatedButton
+              onClick={handleLogout}
+              icon={LogOut}
+              color="rose"
+              className="px-2 w-auto text-xs h-8 py-0"
+            >
+              Log Out
+            </AnimatedButton>
+          </div>
         </div>
       </div>
     </div>

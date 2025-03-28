@@ -30,7 +30,26 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   const location = useLocation(); // Get the current route
-  const hideNavbar = location.pathname === "/login" || location.pathname === "/signup"; // Hide navbar on login and signup pages
+  
+  // Enhanced list of routes where navbar should be hidden
+  const authRoutes = [
+    "/login", 
+    "/signup", 
+    "/forgot-password", 
+    "/reset-password", 
+    "/mother-survey"
+  ];
+  
+  // Check if current route is in the authRoutes list
+  const isAuthRoute = authRoutes.some(route => 
+    location.pathname === route || location.pathname.startsWith(route + "/")
+  );
+  
+  // Check if user is logged out
+  const isLoggedOut = localStorage.getItem("isLoggedOut") === "true";
+  
+  // Hide navbar on auth routes or when logged out
+  const hideNavbar = isAuthRoute || isLoggedOut;
 
   // In a real app, this would come from your auth context
   const userRole = localStorage.getItem("userRole") || "doctor";
@@ -60,8 +79,9 @@ const AppContent = () => {
         </div>
       ) : userRole === "mother" ? (
         <div className="flex min-h-screen bg-background">
-          <MotherNavbar className="hidden md:flex" />
-          <main className="flex-1 pb-16 md:pb-0 md:pl-64">
+          {/* Conditionally render MotherNavbar */}
+          {!hideNavbar && <MotherNavbar className="hidden md:flex" />}
+          <main className={`flex-1 pb-16 md:pb-0 ${!hideNavbar ? "md:pl-64" : ""}`}>
             <Routes>
               <Route path="/" element={<MotherHome />} />
               <Route path="/meal-plans" element={<MotherMealPlans />} />
@@ -73,7 +93,8 @@ const AppContent = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
-          <MotherBottomNav />
+          {/* Conditionally render MotherBottomNav */}
+          {!hideNavbar && <MotherBottomNav />}
         </div>
       ) : (
         <Routes>
