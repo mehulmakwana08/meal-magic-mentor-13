@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { User, Mail, Briefcase, Phone, Edit, LogOut } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Mail, Briefcase, Phone, Edit, LogOut, Moon, Sun } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import AnimatedButton from '@/components/AnimatedButton';
@@ -8,11 +8,31 @@ import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import ProfileEditForm from '@/components/ProfileEditForm';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from '@/components/ui/button';
 
 const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    // Initialize darkMode state from localStorage or system preference
+    if (localStorage.getItem('theme') === 'dark' || 
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      return true;
+    }
+    return false;
+  });
+
+  // Update theme when darkMode state changes
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
 
   // In a real application, this would come from your auth context
   const [userData, setUserData] = useState({
@@ -51,8 +71,16 @@ const Profile = () => {
     });
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    toast({
+      title: darkMode ? "Light mode activated" : "Dark mode activated",
+      description: `Theme switched to ${darkMode ? "light" : "dark"} mode`,
+    });
+  };
+
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 dark:bg-[#1A1F2C] transition-colors duration-200">
       <Header title="Profile" showBackButton />
 
       <div className="px-4 py-6">
@@ -61,13 +89,27 @@ const Profile = () => {
             {userData.profileImage ? (
               <AvatarImage src={userData.profileImage} alt={userData.name} />
             ) : (
-              <AvatarFallback className="bg-primary/10">
-                <User className="h-12 w-12 text-primary" />
+              <AvatarFallback className="bg-primary/10 dark:bg-primary/5">
+                <User className="h-12 w-12 text-primary dark:text-primary" />
               </AvatarFallback>
             )}
           </Avatar>
-          <h1 className="text-xl font-bold">{userData.name}</h1>
-          <p className="text-muted-foreground">{userData.role}</p>
+          <h1 className="text-xl font-bold dark:text-white">{userData.name}</h1>
+          <p className="text-muted-foreground dark:text-gray-400">{userData.role}</p>
+          
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="mt-4"
+            onClick={toggleDarkMode}
+          >
+            {darkMode ? (
+              <Sun className="h-[1.2rem] w-[1.2rem]" />
+            ) : (
+              <Moon className="h-[1.2rem] w-[1.2rem]" />
+            )}
+            <span className="sr-only">Toggle theme</span>
+          </Button>
         </div>
 
         {isEditing ? (
@@ -78,57 +120,57 @@ const Profile = () => {
           />
         ) : (
           <div className="space-y-6">
-            <div className="bg-white rounded-xl border border-border p-4 space-y-4">
+            <div className="bg-white dark:bg-[#222222] rounded-xl border border-border dark:border-gray-700 p-4 space-y-4 transition-colors duration-200">
               <div className="flex justify-between items-center">
-                <h2 className="font-semibold text-lg">Personal Information</h2>
+                <h2 className="font-semibold text-lg dark:text-white">Personal Information</h2>
                 <button 
-                  className="text-primary text-sm flex items-center gap-1"
+                  className="text-primary text-sm flex items-center gap-1 dark:text-primary"
                   onClick={handleEditToggle}
                 >
                   <Edit className="h-4 w-4" /> Edit
                 </button>
               </div>
               
-              <Separator />
+              <Separator className="dark:bg-gray-700" />
 
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <Mail className="h-5 w-5 text-muted-foreground" />
+                  <Mail className="h-5 w-5 text-muted-foreground dark:text-gray-400" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Email</p>
-                    <p className="font-medium">{userData.email}</p>
+                    <p className="text-sm text-muted-foreground dark:text-gray-400">Email</p>
+                    <p className="font-medium dark:text-white">{userData.email}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <Phone className="h-5 w-5 text-muted-foreground" />
+                  <Phone className="h-5 w-5 text-muted-foreground dark:text-gray-400" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Phone</p>
-                    <p className="font-medium">{userData.phone}</p>
+                    <p className="text-sm text-muted-foreground dark:text-gray-400">Phone</p>
+                    <p className="font-medium dark:text-white">{userData.phone}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-border p-4 space-y-4">
-              <h2 className="font-semibold text-lg">Work Information</h2>
+            <div className="bg-white dark:bg-[#222222] rounded-xl border border-border dark:border-gray-700 p-4 space-y-4 transition-colors duration-200">
+              <h2 className="font-semibold text-lg dark:text-white">Work Information</h2>
               
-              <Separator />
+              <Separator className="dark:bg-gray-700" />
 
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <Briefcase className="h-5 w-5 text-muted-foreground" />
+                  <Briefcase className="h-5 w-5 text-muted-foreground dark:text-gray-400" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Center</p>
-                    <p className="font-medium">{userData.center}</p>
+                    <p className="text-sm text-muted-foreground dark:text-gray-400">Center</p>
+                    <p className="font-medium dark:text-white">{userData.center}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <User className="h-5 w-5 text-muted-foreground" />
+                  <User className="h-5 w-5 text-muted-foreground dark:text-gray-400" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Joined Date</p>
-                    <p className="font-medium">{userData.joinedDate}</p>
+                    <p className="text-sm text-muted-foreground dark:text-gray-400">Joined Date</p>
+                    <p className="font-medium dark:text-white">{userData.joinedDate}</p>
                   </div>
                 </div>
               </div>
