@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Users, Utensils, LineChart, Lightbulb } from 'lucide-react';
+import { Home, Users, Utensils, LineChart, Lightbulb, Settings } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
@@ -10,6 +10,7 @@ const navItems = [
   { icon: Utensils, label: 'Meal Plans', path: '/meal-plans' },
   { icon: LineChart, label: 'Progress', path: '/progress' },
   { icon: Lightbulb, label: 'Tips', path: '/tips' },
+  { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
 const BottomNav = () => {

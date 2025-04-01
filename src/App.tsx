@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +16,7 @@ import Tips from "./pages/Tips";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 // Mother-side pages
@@ -71,6 +73,7 @@ const AppContent = () => {
               <Route path="/progress" element={<Progress />} />
               <Route path="/tips" element={<Tips />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<NotFound />} />
@@ -90,6 +93,7 @@ const AppContent = () => {
               <Route path="/tips" element={<MotherTips />} />
               <Route path="/mother-survey" element={<MotherSurvey />} />
               <Route path="/profile" element={<MotherProfile />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<NotFound />} />
