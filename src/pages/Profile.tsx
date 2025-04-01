@@ -7,6 +7,7 @@ import AnimatedButton from '@/components/AnimatedButton';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import ProfileEditForm from '@/components/ProfileEditForm';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -20,7 +21,8 @@ const Profile = () => {
     role: "Anganwadi Worker",
     phone: "+91 98765 43210",
     center: "Anganwadi Center #42, Jaipur",
-    joinedDate: "March 2022"
+    joinedDate: "March 2022",
+    profileImage: undefined
   });
 
   const handleLogout = () => {
@@ -55,9 +57,15 @@ const Profile = () => {
 
       <div className="px-4 py-6">
         <div className="flex flex-col items-center mb-8">
-          <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-            <User className="h-12 w-12 text-primary" />
-          </div>
+          <Avatar className="h-24 w-24 mb-4">
+            {userData.profileImage ? (
+              <AvatarImage src={userData.profileImage} alt={userData.name} />
+            ) : (
+              <AvatarFallback className="bg-primary/10">
+                <User className="h-12 w-12 text-primary" />
+              </AvatarFallback>
+            )}
+          </Avatar>
           <h1 className="text-xl font-bold">{userData.name}</h1>
           <p className="text-muted-foreground">{userData.role}</p>
         </div>

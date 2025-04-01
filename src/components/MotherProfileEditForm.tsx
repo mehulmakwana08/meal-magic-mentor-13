@@ -1,12 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User, Mail, Phone, MapPin } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Upload } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Define the form schema with validations
 const formSchema = z.object({
@@ -30,8 +31,9 @@ interface MotherProfileEditFormProps {
     bloodType?: string;
     allergies?: string;
     emergencyContact?: string;
+    profileImage?: string;
   };
-  onSubmit: (values: MotherProfileFormValues) => void;
+  onSubmit: (values: MotherProfileFormValues & { profileImage?: string }) => void;
   onCancel: () => void;
 }
 
@@ -40,6 +42,8 @@ const MotherProfileEditForm: React.FC<MotherProfileEditFormProps> = ({
   onSubmit, 
   onCancel 
 }) => {
+  const [profileImage, setProfileImage] = useState<string | undefined>(userData.profileImage);
+  
   const form = useForm<MotherProfileFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,9 +54,60 @@ const MotherProfileEditForm: React.FC<MotherProfileEditFormProps> = ({
     },
   });
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File is too large. Maximum size is 5MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setProfileImage(event.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFormSubmit = (values: MotherProfileFormValues) => {
+    onSubmit({ ...values, profileImage });
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
+        <div className="flex flex-col items-center mb-6">
+          <div className="relative">
+            <Avatar className="h-24 w-24">
+              {profileImage ? (
+                <AvatarImage src={profileImage} alt={userData.name} />
+              ) : (
+                <AvatarFallback className="bg-purple-100">
+                  <User className="h-12 w-12 text-purple-600" />
+                </AvatarFallback>
+              )}
+            </Avatar>
+            <div className="absolute -bottom-2 -right-2">
+              <label
+                htmlFor="profile-image"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-purple-600 text-white shadow-md hover:bg-purple-700"
+              >
+                <Upload className="h-4 w-4" />
+                <input
+                  id="profile-image"
+                  type="file"
+                  accept="image/*"
+                  className="sr-only"
+                  onChange={handleImageChange}
+                />
+              </label>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">Click to upload profile picture</p>
+        </div>
+
         <FormField
           control={form.control}
           name="name"
