@@ -1,23 +1,27 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { User, Mail, Briefcase, Phone, Edit, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import AnimatedButton from '@/components/AnimatedButton';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+import ProfileEditForm from '@/components/ProfileEditForm';
 
 const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
 
   // In a real application, this would come from your auth context
-  const userData = {
+  const [userData, setUserData] = useState({
     name: "Ayushi Sharma",
     email: "ayushi@example.com",
     role: "Anganwadi Worker",
     phone: "+91 98765 43210",
     center: "Anganwadi Center #42, Jaipur",
     joinedDate: "March 2022"
-  };
+  });
 
   const handleLogout = () => {
     // In a real application, this would call your auth logout method
@@ -26,6 +30,23 @@ const Profile = () => {
       description: "You have been logged out of your account",
     });
     navigate("/login");
+  };
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleProfileUpdate = (values) => {
+    // In a real application, this would call an API to update the profile
+    setUserData({
+      ...userData,
+      ...values,
+    });
+    setIsEditing(false);
+    toast({
+      title: "Profile updated",
+      description: "Your profile information has been updated successfully",
+    });
   };
 
   return (
@@ -41,68 +62,82 @@ const Profile = () => {
           <p className="text-muted-foreground">{userData.role}</p>
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-border p-4 space-y-4">
-            <h2 className="font-semibold text-lg">Personal Information</h2>
+        {isEditing ? (
+          <ProfileEditForm 
+            userData={userData}
+            onSubmit={handleProfileUpdate}
+            onCancel={handleEditToggle}
+          />
+        ) : (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-border p-4 space-y-4">
+              <div className="flex justify-between items-center">
+                <h2 className="font-semibold text-lg">Personal Information</h2>
+                <button 
+                  className="text-primary text-sm flex items-center gap-1"
+                  onClick={handleEditToggle}
+                >
+                  <Edit className="h-4 w-4" /> Edit
+                </button>
+              </div>
+              
+              <Separator />
 
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium">{userData.email}</p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <Mail className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Email</p>
+                    <p className="font-medium">{userData.email}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Phone className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Phone</p>
+                    <p className="font-medium">{userData.phone}</p>
+                  </div>
                 </div>
               </div>
+            </div>
 
-              <div className="flex items-center gap-3">
-                <Phone className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Phone</p>
-                  <p className="font-medium">{userData.phone}</p>
+            <div className="bg-white rounded-xl border border-border p-4 space-y-4">
+              <h2 className="font-semibold text-lg">Work Information</h2>
+              
+              <Separator />
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <Briefcase className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Center</p>
+                    <p className="font-medium">{userData.center}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <User className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Joined Date</p>
+                    <p className="font-medium">{userData.joinedDate}</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <button className="text-primary text-sm flex items-center gap-1">
-                <Edit className="h-4 w-4" /> Edit
-              </button>
+            <div className="flex justify-center">
+              <AnimatedButton
+                onClick={handleLogout}
+                icon={LogOut}
+                color="rose"
+                className="px-2 w-auto text-xs h-8 py-0"
+              >
+                Log Out
+              </AnimatedButton>
             </div>
           </div>
-
-          <div className="bg-white rounded-xl border border-border p-4 space-y-4">
-            <h2 className="font-semibold text-lg">Work Information</h2>
-
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <Briefcase className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Center</p>
-                  <p className="font-medium">{userData.center}</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <User className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Joined Date</p>
-                  <p className="font-medium">{userData.joinedDate}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-center">
-            <AnimatedButton
-              onClick={handleLogout}
-              icon={LogOut}
-              color="rose"
-              className="px-2 w-auto text-xs h-8 py-0"
-            >
-              Log Out
-            </AnimatedButton>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

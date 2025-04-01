@@ -1,18 +1,21 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { User, Mail, Calendar, Phone, MapPin, Edit, LogOut, Baby, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import AnimatedButton from '@/components/AnimatedButton';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+import MotherProfileEditForm from '@/components/MotherProfileEditForm';
 
 const MotherProfile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
   
   // In a real application, this would come from your auth context
-  const userData = {
+  const [userData, setUserData] = useState({
     name: "Meera Singh",
     email: "meera@example.com",
     phone: "+91 98765 12345",
@@ -23,7 +26,7 @@ const MotherProfile = () => {
     bloodType: "B+",
     allergies: "None",
     emergencyContact: "Raj Singh (Husband): +91 98765 54321"
-  };
+  });
 
   const handleLogout = () => {
     // In a real application, this would call your auth logout method
@@ -33,6 +36,23 @@ const MotherProfile = () => {
       description: "You have been logged out of your account",
     });
     navigate("/login");
+  };
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleProfileUpdate = (values) => {
+    // In a real application, this would call an API to update the profile
+    setUserData({
+      ...userData,
+      ...values,
+    });
+    setIsEditing(false);
+    toast({
+      title: "Profile updated",
+      description: "Your profile information has been updated successfully",
+    });
   };
 
   return (
@@ -60,83 +80,99 @@ const MotherProfile = () => {
           </p>
         </div>
         
-        <div className="space-y-6">
-          <Card className="bg-white rounded-xl border border-border p-4 space-y-4">
-            <h2 className="font-semibold text-lg">Personal Information</h2>
-            
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium">{userData.email}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <Phone className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Phone</p>
-                  <p className="font-medium">{userData.phone}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <MapPin className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Address</p>
-                  <p className="font-medium">{userData.address}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex justify-end">
-              <button className="text-purple-600 text-sm flex items-center gap-1">
-                <Edit className="h-4 w-4" /> Edit
-              </button>
-            </div>
+        {isEditing ? (
+          <Card className="p-4">
+            <MotherProfileEditForm 
+              userData={userData}
+              onSubmit={handleProfileUpdate}
+              onCancel={handleEditToggle}
+            />
           </Card>
-          
-          <Card className="bg-white rounded-xl border border-border p-4 space-y-4">
-            <h2 className="font-semibold text-lg">Medical Information</h2>
+        ) : (
+          <div className="space-y-6">
+            <Card className="bg-white rounded-xl border border-border p-4 space-y-4">
+              <div className="flex justify-between items-center">
+                <h2 className="font-semibold text-lg">Personal Information</h2>
+                <button 
+                  className="text-purple-600 text-sm flex items-center gap-1"
+                  onClick={handleEditToggle}
+                >
+                  <Edit className="h-4 w-4" /> Edit
+                </button>
+              </div>
+              
+              <Separator />
+              
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <Mail className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Email</p>
+                    <p className="font-medium">{userData.email}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <Phone className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Phone</p>
+                    <p className="font-medium">{userData.phone}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Address</p>
+                    <p className="font-medium">{userData.address}</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
             
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <Calendar className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Due Date</p>
-                  <p className="font-medium">{userData.dueDate}</p>
-                </div>
-              </div>
+            <Card className="bg-white rounded-xl border border-border p-4 space-y-4">
+              <h2 className="font-semibold text-lg">Medical Information</h2>
               
-              <div className="flex items-start gap-3">
-                <Heart className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Blood Type</p>
-                  <p className="font-medium">{userData.bloodType}</p>
-                </div>
-              </div>
+              <Separator />
               
-              <div className="flex items-start gap-3">
-                <User className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Emergency Contact</p>
-                  <p className="font-medium">{userData.emergencyContact}</p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Due Date</p>
+                    <p className="font-medium">{userData.dueDate}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <Heart className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Blood Type</p>
+                    <p className="font-medium">{userData.bloodType}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <User className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Emergency Contact</p>
+                    <p className="font-medium">{userData.emergencyContact}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Card>
-          
-          <AnimatedButton
-            onClick={handleLogout}
-            icon={LogOut}
-            color="rose"
-            fullWidth
-            size="md"
-          >
-            Log Out
-          </AnimatedButton>
-        </div>
+            </Card>
+            
+            <AnimatedButton
+              onClick={handleLogout}
+              icon={LogOut}
+              color="rose"
+              fullWidth
+              size="md"
+            >
+              Log Out
+            </AnimatedButton>
+          </div>
+        )}
       </div>
     </div>
   );
