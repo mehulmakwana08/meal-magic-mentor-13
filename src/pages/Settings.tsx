@@ -1,8 +1,8 @@
+
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -36,6 +36,7 @@ import {
   SelectTrigger,
   SelectValue 
 } from '@/components/ui/select';
+import { SettingItem } from '@/components/SettingItem';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -97,17 +98,11 @@ const Settings = () => {
               />
               <Separator className="dark:bg-gray-700" />
               <SettingItem
-                title="Change Password"
-                description="Update your password or security questions"
-                onClick={() => {}}
-                icon={<ChevronRight className="w-5 h-5 text-muted-foreground dark:text-gray-400" />}
-              />
-              <Separator className="dark:bg-gray-700" />
-              <SettingItem
                 title="Privacy & Security"
                 description="Control your privacy settings and account security"
-                onClick={() => {}}
+                onClick={() => navigate('/privacy-security')}
                 icon={<ChevronRight className="w-5 h-5 text-muted-foreground dark:text-gray-400" />}
+                badge="New"
               />
             </CardContent>
           </Card>
@@ -305,42 +300,6 @@ const Settings = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
-    </div>
-  );
-};
-
-const SettingItem = ({ 
-  title, 
-  description, 
-  icon, 
-  onClick,
-  badge
-}: { 
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  onClick?: () => void;
-  badge?: string;
-}) => {
-  return (
-    <div 
-      className={`flex items-center justify-between ${onClick ? 'cursor-pointer hover:bg-muted/50 dark:hover:bg-gray-800/50 -mx-2 px-2 py-1 rounded-lg transition-colors' : ''}`}
-      onClick={onClick}
-    >
-      <div className="space-y-0.5">
-        <div className="flex items-center gap-2">
-          <Label className="text-base cursor-pointer dark:text-white">{title}</Label>
-          {badge && (
-            <Badge variant="outline" className="text-xs font-normal dark:border-gray-700">
-              {badge}
-            </Badge>
-          )}
-        </div>
-        <p className="text-sm text-muted-foreground dark:text-gray-400">{description}</p>
-      </div>
-      <div className="flex-shrink-0">
-        {icon}
       </div>
     </div>
   );

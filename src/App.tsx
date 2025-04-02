@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -18,6 +17,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import PrivacySecurity from "./pages/PrivacySecurity";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -98,6 +98,7 @@ const AppContent = () => {
               <Route path="/tips" element={<Tips />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/privacy-security" element={<PrivacySecurity />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<NotFound />} />
@@ -118,6 +119,7 @@ const AppContent = () => {
               <Route path="/mother-survey" element={<MotherSurvey />} />
               <Route path="/profile" element={<MotherProfile />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/privacy-security" element={<PrivacySecurity />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<NotFound />} />
