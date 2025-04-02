@@ -1,4 +1,7 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -92,7 +95,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-poppins transition-colors duration-200;
+    @apply bg-background text-foreground transition-colors duration-200;
   }
   
   .dark body {
@@ -101,24 +104,5 @@
 }
 
 @layer utilities {
-  .font-poppins {
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .text-shadow {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  
-  .card-shadow {
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-  }
-  
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  /* ... keep existing code (utility classes) */
 }

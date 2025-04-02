@@ -28,6 +28,14 @@ import {
 import LanguageSelector from '@/components/LanguageSelector';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useLanguage, languages } from '@/contexts/LanguageContext';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue 
+} from '@/components/ui/select';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -36,6 +44,7 @@ const Settings = () => {
   const [offlineMode, setOfflineMode] = useState(false);
   
   const { theme, setTheme } = useTheme();
+  const { currentLanguage, setLanguage } = useLanguage();
   
   const handleLogout = () => {
     toast.loading('Logging out...');
@@ -51,6 +60,16 @@ const Settings = () => {
     toast.error('This is just a demo. Account deletion is not implemented.', {
       description: 'In a real app, this would delete your account after confirmation.'
     });
+  };
+
+  const handleLanguageChange = (code: string) => {
+    const selected = languages.find(lang => lang.code === code);
+    if (selected) {
+      setLanguage(selected);
+      toast.success(`Language changed to ${selected.name}`, {
+        description: "Your language preference has been saved."
+      });
+    }
   };
   
   return (
@@ -133,8 +152,28 @@ const Settings = () => {
               <Separator className="dark:bg-gray-700" />
               <SettingItem
                 title="Language"
-                description="Choose your preferred language"
-                icon={<LanguageSelector className="w-full md:w-auto" />}
+                description="Choose your preferred language and font"
+                icon={
+                  <Select 
+                    defaultValue={currentLanguage.code}
+                    onValueChange={handleLanguageChange}
+                  >
+                    <SelectTrigger className="w-36 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
+                      {languages.map((lang) => (
+                        <SelectItem 
+                          key={lang.code} 
+                          value={lang.code}
+                          className="dark:text-white dark:focus:bg-gray-700"
+                        >
+                          {lang.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                }
               />
               <Separator className="dark:bg-gray-700" />
               <SettingItem
