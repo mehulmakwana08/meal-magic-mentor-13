@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -28,6 +27,7 @@ import {
 } from 'lucide-react';
 import LanguageSelector from '@/components/LanguageSelector';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -35,40 +35,14 @@ const Settings = () => {
   const [dataSync, setDataSync] = useState(true);
   const [offlineMode, setOfflineMode] = useState(false);
   
-  // Initialize darkMode state from localStorage or system preference
-  const [theme, setTheme] = useState(() => {
-    if (localStorage.getItem('theme') === 'dark' || 
-        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      return true;
-    }
-    return false;
-  });
-  
-  // Update theme when darkMode state changes
-  useEffect(() => {
-    if (theme) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [theme]);
+  const { theme, setTheme } = useTheme();
   
   const handleLogout = () => {
-    // Show loading toast
     toast.loading('Logging out...');
-    
-    // Simulate logout process
     setTimeout(() => {
-      // Set logged out status in localStorage
       localStorage.setItem('isLoggedOut', 'true');
       localStorage.removeItem('userRole');
-      
-      // Show success toast
       toast.success('Logged out successfully');
-      
-      // Navigate to login page
       navigate('/login');
     }, 1000);
   };
@@ -85,7 +59,6 @@ const Settings = () => {
       
       <div className="px-4 py-4 md:px-6 md:py-6 max-w-4xl mx-auto">
         <div className="space-y-6">
-          {/* Account Settings */}
           <Card className="dark:bg-[#222222] dark:border-gray-700 transition-colors duration-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 dark:text-white">
@@ -120,7 +93,6 @@ const Settings = () => {
             </CardContent>
           </Card>
           
-          {/* App Settings */}
           <Card className="dark:bg-[#222222] dark:border-gray-700 transition-colors duration-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 dark:text-white">
@@ -196,7 +168,6 @@ const Settings = () => {
             </CardContent>
           </Card>
           
-          {/* Help & Support */}
           <Card className="dark:bg-[#222222] dark:border-gray-700 transition-colors duration-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 dark:text-white">
@@ -235,7 +206,6 @@ const Settings = () => {
             </CardContent>
           </Card>
           
-          {/* Legal & Policies */}
           <Card className="dark:bg-[#222222] dark:border-gray-700 transition-colors duration-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 dark:text-white">
@@ -263,7 +233,6 @@ const Settings = () => {
             </CardContent>
           </Card>
           
-          {/* Danger Zone */}
           <Card className="border-destructive/20 dark:bg-[#222222] dark:border-red-900/50 transition-colors duration-200">
             <CardHeader className="text-destructive">
               <CardTitle className="flex items-center gap-2">
@@ -302,7 +271,6 @@ const Settings = () => {
   );
 };
 
-// Helper component for settings items
 const SettingItem = ({ 
   title, 
   description, 
