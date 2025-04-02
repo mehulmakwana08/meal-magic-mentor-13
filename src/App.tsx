@@ -20,6 +20,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import PrivacySecurity from "./pages/PrivacySecurity";
 import TermsOfService from "./pages/TermsOfService";
+import ShareApp from "./pages/ShareApp";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -102,6 +103,7 @@ const AppContent = () => {
               <Route path="/settings" element={<Settings />} />
               <Route path="/privacy-security" element={<PrivacySecurity />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/share-app" element={<ShareApp />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<NotFound />} />
@@ -124,6 +126,7 @@ const AppContent = () => {
               <Route path="/settings" element={<Settings />} />
               <Route path="/privacy-security" element={<PrivacySecurity />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/share-app" element={<ShareApp />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<NotFound />} />

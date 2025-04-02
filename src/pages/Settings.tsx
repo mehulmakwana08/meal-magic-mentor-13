@@ -229,12 +229,9 @@ const Settings = () => {
               <SettingItem
                 title="Share App"
                 description="Invite others to use this application"
-                onClick={() => {
-                  toast.success("Sharing functionality would open here", {
-                    description: "This is just a demo feature"
-                  });
-                }}
+                onClick={() => navigate('/share-app')}
                 icon={<Share2 className="w-5 h-5 text-muted-foreground dark:text-gray-400" />}
+                badge="New"
               />
             </CardContent>
           </Card>
