@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -31,7 +32,28 @@ import MotherSurvey from "./pages/mother/MotherSurvey";
 import MotherNavbar from "./components/mother/MotherNavbar";
 import MotherBottomNav from "./components/mother/MotherBottomNav";
 
-const queryClient = new QueryClient();
+// Create a new QueryClient instance within the component
+const App = () => {
+  const queryClient = new QueryClient();
+  
+  return (
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <AppContent />
+              </BrowserRouter>
+            </TooltipProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </React.StrictMode>
+  );
+};
 
 const AppContent = () => {
   const location = useLocation(); // Get the current route
@@ -112,24 +134,6 @@ const AppContent = () => {
         </Routes>
       )}
     </>
-  );
-};
-
-const App = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <LanguageProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <AppContent />
-            </BrowserRouter>
-          </TooltipProvider>
-        </LanguageProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
   );
 };
 
