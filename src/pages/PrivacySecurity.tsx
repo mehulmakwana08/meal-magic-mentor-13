@@ -260,6 +260,15 @@ const PrivacySecurity = () => {
               />
               <Separator className="dark:bg-gray-700" />
               <SettingItem
+                title="Terms of Service"
+                description="View the terms and conditions for using our service"
+                onClick={() => {
+                  window.location.href = '/terms-of-service';
+                }}
+                icon={<FileText className="w-5 h-5 text-muted-foreground dark:text-gray-400" />}
+              />
+              <Separator className="dark:bg-gray-700" />
+              <SettingItem
                 title="Activity Log"
                 description="View and manage your account activity"
                 onClick={() => {

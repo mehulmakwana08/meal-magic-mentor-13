@@ -10,6 +10,8 @@ interface SettingItemProps {
   icon: React.ReactNode;
   onClick?: () => void;
   badge?: string;
+  badgeVariant?: "default" | "secondary" | "destructive" | "outline";
+  className?: string;
 }
 
 export const SettingItem = ({ 
@@ -17,13 +19,16 @@ export const SettingItem = ({
   description, 
   icon, 
   onClick,
-  badge
+  badge,
+  badgeVariant = "outline",
+  className
 }: SettingItemProps) => {
   return (
     <div 
       className={cn(
         "flex items-center justify-between",
-        onClick ? 'cursor-pointer hover:bg-muted/50 dark:hover:bg-gray-800/50 -mx-2 px-2 py-1 rounded-lg transition-colors' : ''
+        onClick ? 'cursor-pointer hover:bg-muted/50 dark:hover:bg-gray-800/50 -mx-2 px-2 py-1 rounded-lg transition-colors' : '',
+        className
       )}
       onClick={onClick}
     >
@@ -31,7 +36,7 @@ export const SettingItem = ({
         <div className="flex items-center gap-2">
           <Label className="text-base cursor-pointer dark:text-white">{title}</Label>
           {badge && (
-            <Badge variant="outline" className="text-xs font-normal dark:border-gray-700">
+            <Badge variant={badgeVariant} className="text-xs font-normal dark:border-gray-700">
               {badge}
             </Badge>
           )}

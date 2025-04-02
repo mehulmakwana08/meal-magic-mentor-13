@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -18,6 +19,7 @@ import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import PrivacySecurity from "./pages/PrivacySecurity";
+import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -99,6 +101,7 @@ const AppContent = () => {
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/privacy-security" element={<PrivacySecurity />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<NotFound />} />
@@ -120,6 +123,7 @@ const AppContent = () => {
               <Route path="/profile" element={<MotherProfile />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/privacy-security" element={<PrivacySecurity />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<NotFound />} />

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -137,7 +136,7 @@ const Settings = () => {
                     checked={theme}
                     onCheckedChange={(checked) => {
                       setTheme(checked);
-                      toast.success(`${checked ? 'Dark' : 'Light'} mode activated`, {
+                      toast.success(`${checked ? 'Dark' : 'Light'}` + ' mode activated', {
                         description: "Your theme preference has been saved."
                       });
                     }}
@@ -254,14 +253,14 @@ const Settings = () => {
               <SettingItem
                 title="Privacy Policy"
                 description="How we handle and protect your data"
-                onClick={() => {}}
+                onClick={() => navigate('/privacy-security')}
                 icon={<ChevronRight className="w-5 h-5 text-muted-foreground dark:text-gray-400" />}
               />
               <Separator className="dark:bg-gray-700" />
               <SettingItem
                 title="Terms of Service"
                 description="Conditions for using our application"
-                onClick={() => {}}
+                onClick={() => navigate('/terms-of-service')}
                 icon={<ChevronRight className="w-5 h-5 text-muted-foreground dark:text-gray-400" />}
               />
             </CardContent>
