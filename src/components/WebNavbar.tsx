@@ -1,7 +1,10 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Users, Utensils, LineChart, Lightbulb, Settings } from 'lucide-react';
+import { 
+  Home, Users, Utensils, LineChart, Lightbulb, Settings, 
+  LayoutDashboard, BarChart2, Brain
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -10,6 +13,9 @@ const navItems = [
   { icon: Utensils, label: 'Meal Plans', path: '/meal-plans' },
   { icon: LineChart, label: 'Progress', path: '/progress' },
   { icon: Lightbulb, label: 'Tips', path: '/tips' },
+  { icon: LayoutDashboard, label: 'Anganwadi Dashboard', path: '/anganwadi-dashboard' },
+  { icon: BarChart2, label: 'Impact Dashboard', path: '/impact-dashboard' },
+  { icon: Brain, label: 'AI Nutrition Center', path: '/ai-nutrition' },
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
@@ -32,7 +38,7 @@ const WebNavbar = ({ className }: WebNavbarProps) => {
         <h1 className="text-xl font-bold text-primary">Anganwadi Nutrition</h1>
       </div>
       
-      <div className="flex flex-col space-y-1">
+      <div className="flex flex-col space-y-1 overflow-y-auto flex-1 pr-3">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;

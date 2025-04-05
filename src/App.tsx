@@ -37,6 +37,14 @@ import MotherComplain from "./pages/mother/MotherComplain";
 import MotherNavbar from "./components/mother/MotherNavbar";
 import MotherBottomNav from "./components/mother/MotherBottomNav";
 
+// New AI and Enhanced Feature pages
+import AINutritionPlanning from "./pages/mother/AINutritionPlanning";
+import LocalFoodDatabase from "./pages/mother/LocalFoodDatabase";
+import RealTimeMonitoring from "./pages/mother/RealTimeMonitoring";
+import AnganwadiDashboard from "./pages/doctor/AnganwadiDashboard";
+import ImpactDashboard from "./pages/doctor/ImpactDashboard";
+import AIScreen from "./pages/ai-nutrition/AIScreen";
+
 // Create a new QueryClient instance within the component
 const App = () => {
   const queryClient = new QueryClient();
@@ -109,6 +117,12 @@ const AppContent = () => {
               <Route path="/complains" element={<DoctorComplains />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
+              
+              {/* New Doctor Routes */}
+              <Route path="/anganwadi-dashboard" element={<AnganwadiDashboard />} />
+              <Route path="/impact-dashboard" element={<ImpactDashboard />} />
+              <Route path="/ai-nutrition" element={<AIScreen />} />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
@@ -133,6 +147,13 @@ const AppContent = () => {
               <Route path="/share-app" element={<ShareApp />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
+              
+              {/* New Mother Routes */}
+              <Route path="/ai-nutrition-planning" element={<AINutritionPlanning />} />
+              <Route path="/local-food-database" element={<LocalFoodDatabase />} />
+              <Route path="/real-time-monitoring" element={<RealTimeMonitoring />} />
+              <Route path="/ai-nutrition" element={<AIScreen />} />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
