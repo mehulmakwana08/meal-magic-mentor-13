@@ -5,13 +5,25 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 
+// List of Indian cities for the dropdown
+const indianCities = [
+  "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", 
+  "Kolkata", "Pune", "Ahmedabad", "Jaipur", "Lucknow",
+  "Kanpur", "Nagpur", "Indore", "Thane", "Bhopal",
+  "Visakhapatnam", "Patna", "Vadodara", "Ghaziabad", "Ludhiana"
+];
+
 // Schema for form validation
 const formSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+  mobileNumber: z.string().regex(/^[0-9]{10}$/, { message: "Mobile number must be 10 digits" }),
+  city: z.string().min(1, { message: "Please select a city" }),
   subject: z.string().min(5, { message: "Subject must be at least 5 characters" }),
   message: z.string().min(20, { message: "Message must be at least 20 characters" }),
 });
@@ -23,6 +35,9 @@ const MotherComplain = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: localStorage.getItem('userName') || '',
+      mobileNumber: localStorage.getItem('userMobile') || '',
+      city: localStorage.getItem('userCity') || '',
       subject: "",
       message: "",
     },
@@ -32,6 +47,11 @@ const MotherComplain = () => {
     setIsSubmitting(true);
     
     try {
+      // Store user details in localStorage for future use
+      localStorage.setItem('userName', values.name);
+      localStorage.setItem('userMobile', values.mobileNumber);
+      localStorage.setItem('userCity', values.city);
+      
       // In a real app, this would be an API call to send the complaint
       // Simulate network delay
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -43,7 +63,9 @@ const MotherComplain = () => {
         id: Date.now().toString(),
         subject: values.subject,
         message: values.message,
-        motherName: localStorage.getItem('userName') || 'Mother',
+        motherName: values.name,
+        mobileNumber: values.mobileNumber,
+        city: values.city,
         date: new Date().toISOString(),
         status: 'pending',
         response: null,
@@ -58,7 +80,13 @@ const MotherComplain = () => {
       });
       
       // Reset form
-      form.reset();
+      form.reset({
+        name: values.name,
+        mobileNumber: values.mobileNumber,
+        city: values.city,
+        subject: "",
+        message: "",
+      });
     } catch (error) {
       toast({
         title: "Error",
@@ -83,6 +111,63 @@ const MotherComplain = () => {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Your Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your full name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="mobileNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Mobile Number</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter your 10-digit mobile number" 
+                          maxLength={10}
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>City</FormLabel>
+                    <Select 
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your city" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {indianCities.map(city => (
+                          <SelectItem key={city} value={city}>{city}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="subject"
@@ -161,6 +246,17 @@ const MotherComplaintHistory = () => {
           </CardHeader>
           <CardContent className="pt-4">
             <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2 text-sm">
+                <div>
+                  <span className="font-medium">Name:</span> {complaint.motherName}
+                </div>
+                <div>
+                  <span className="font-medium">Mobile:</span> {complaint.mobileNumber || 'Not provided'}
+                </div>
+                <div>
+                  <span className="font-medium">City:</span> {complaint.city || 'Not provided'}
+                </div>
+              </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Your complaint:</h3>
                 <p className="mt-1 text-gray-800">{complaint.message}</p>
