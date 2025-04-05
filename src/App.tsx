@@ -24,6 +24,7 @@ import ShareApp from "./pages/ShareApp";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import DoctorComplains from "./pages/DoctorComplains";
 
 // Mother-side pages
 import MotherHome from "./pages/mother/MotherHome";
@@ -32,6 +33,7 @@ import MotherProgress from "./pages/mother/MotherProgress";
 import MotherTips from "./pages/mother/MotherTips";
 import MotherProfile from "./pages/mother/MotherProfile";
 import MotherSurvey from "./pages/mother/MotherSurvey";
+import MotherComplain from "./pages/mother/MotherComplain";
 import MotherNavbar from "./components/mother/MotherNavbar";
 import MotherBottomNav from "./components/mother/MotherBottomNav";
 
@@ -104,6 +106,7 @@ const AppContent = () => {
               <Route path="/privacy-security" element={<PrivacySecurity />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/share-app" element={<ShareApp />} />
+              <Route path="/complains" element={<DoctorComplains />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<NotFound />} />
@@ -121,6 +124,7 @@ const AppContent = () => {
               <Route path="/meal-plans" element={<MotherMealPlans />} />
               <Route path="/progress" element={<MotherProgress />} />
               <Route path="/tips" element={<MotherTips />} />
+              <Route path="/complain" element={<MotherComplain />} />
               <Route path="/mother-survey" element={<MotherSurvey />} />
               <Route path="/profile" element={<MotherProfile />} />
               <Route path="/settings" element={<Settings />} />
