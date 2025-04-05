@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,11 +21,14 @@ import {
   ChevronRight,
   Globe,
   Bell,
-  Shield
+  Shield,
+  Moon,
+  Sun
 } from 'lucide-react';
 import LanguageSelector from '@/components/LanguageSelector';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage, languages } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { 
   Select,
   SelectContent,
@@ -43,6 +45,7 @@ const Settings = () => {
   const [offlineMode, setOfflineMode] = useState(false);
   
   const { currentLanguage, setLanguage } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   
   const handleLogout = () => {
     toast.loading('Logging out...');
@@ -116,6 +119,23 @@ const Settings = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <SettingItem
+                title="Theme"
+                description={`Currently using ${theme} theme`}
+                icon={
+                  <div className="flex items-center gap-2">
+                    {theme === 'dark' ? 
+                      <Moon className="w-5 h-5 text-muted-foreground mr-2" /> : 
+                      <Sun className="w-5 h-5 text-muted-foreground mr-2" />
+                    }
+                    <Switch
+                      checked={theme === 'dark'}
+                      onCheckedChange={toggleTheme}
+                    />
+                  </div>
+                }
+              />
+              <Separator />
+              <SettingItem
                 title="Notifications"
                 description="Manage your notification preferences"
                 icon={
@@ -134,7 +154,7 @@ const Settings = () => {
                     defaultValue={currentLanguage.code}
                     onValueChange={handleLanguageChange}
                   >
-                    <SelectTrigger className="w-36 bg-white">
+                    <SelectTrigger className="w-36 bg-white dark:bg-muted">
                       <SelectValue placeholder="Select language" />
                     </SelectTrigger>
                     <SelectContent>
