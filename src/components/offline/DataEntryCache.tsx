@@ -192,7 +192,8 @@ const DataEntryCache: React.FC<DataEntryCacheProps> = ({
                             variant="ghost" 
                             size="icon" 
                             onClick={() => handleSyncItem(item)}
-                            disabled={item.syncStatus === 'syncing' || !navigator.onLine}
+                            disabled={item.syncStatus === 'syncing'}
+                            className="h-8 w-8"
                           >
                             <Upload className="h-4 w-4" />
                           </Button>
@@ -203,6 +204,7 @@ const DataEntryCache: React.FC<DataEntryCacheProps> = ({
                             size="icon" 
                             onClick={() => handleRemoveItem(item.id)}
                             disabled={item.syncStatus === 'syncing'}
+                            className="h-8 w-8"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
