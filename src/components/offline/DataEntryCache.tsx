@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge'; // Added import for Badge component
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Trash2, Upload, CheckCircle, AlertCircle, Clock } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -46,14 +45,12 @@ const DataEntryCache: React.FC<DataEntryCacheProps> = ({
     if (!onSync || item.syncStatus === 'syncing') return;
     
     try {
-      // Update state to show syncing
       setCachedItems(prev => 
         prev.map(i => i.id === item.id ? { ...i, syncStatus: 'syncing' } : i)
       );
       
       await onSync(item);
       
-      // Update state to show synced
       setCachedItems(prev => 
         prev.map(i => i.id === item.id ? { ...i, syncStatus: 'synced' } : i)
       );
@@ -65,7 +62,6 @@ const DataEntryCache: React.FC<DataEntryCacheProps> = ({
     } catch (error) {
       console.error("Error syncing item:", error);
       
-      // Update state to show error
       setCachedItems(prev => 
         prev.map(i => i.id === item.id ? { 
           ...i, 
@@ -146,7 +142,9 @@ const DataEntryCache: React.FC<DataEntryCacheProps> = ({
     }
   };
 
-  const pendingCount = cachedItems.filter(item => item.syncStatus === 'pending' || item.syncStatus === 'error').length;
+  const pendingCount = cachedItems.filter(item => 
+    item.syncStatus === 'pending' || item.syncStatus === 'error'
+  ).length;
 
   return (
     <Card className={className}>
