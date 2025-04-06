@@ -1,20 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Trash2, Upload, CheckCircle, AlertCircle, Clock } from 'lucide-react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
-interface CachedItem {
-  id: string;
-  type: string;
-  timestamp: number;
-  data: any;
-  syncStatus: 'pending' | 'syncing' | 'error' | 'synced';
-  errorMessage?: string;
-}
+import { Trash2, Upload } from 'lucide-react';
+import CachedItemsTable from './CachedItemsTable';
+import { CachedItem } from './CachedItemRow';
 
 interface DataEntryCacheProps {
   items?: CachedItem[];
@@ -127,21 +119,6 @@ const DataEntryCache: React.FC<DataEntryCacheProps> = ({
     return date.toLocaleString();
   };
 
-  const renderSyncStatus = (status: CachedItem['syncStatus']) => {
-    switch (status) {
-      case 'pending':
-        return <Clock className="h-4 w-4 text-amber-500" />;
-      case 'syncing':
-        return <span className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></span>;
-      case 'error':
-        return <AlertCircle className="h-4 w-4 text-destructive" />;
-      case 'synced':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
-      default:
-        return null;
-    }
-  };
-
   const pendingCount = cachedItems.filter(item => 
     item.syncStatus === 'pending' || item.syncStatus === 'error'
   ).length;
@@ -159,64 +136,12 @@ const DataEntryCache: React.FC<DataEntryCacheProps> = ({
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        {cachedItems.length === 0 ? (
-          <div className="p-6 text-center text-muted-foreground">
-            <p>No cached data.</p>
-            <p className="text-sm mt-1">All your changes have been synchronized.</p>
-          </div>
-        ) : (
-          <ScrollArea className="h-[300px]">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Time</TableHead>
-                  <TableHead className="w-[80px]">Status</TableHead>
-                  <TableHead className="w-[100px] text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {cachedItems.map(item => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.type}</TableCell>
-                    <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-center">
-                        {renderSyncStatus(item.syncStatus)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end space-x-1">
-                        {(item.syncStatus === 'pending' || item.syncStatus === 'error') && onSync && (
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            onClick={() => handleSyncItem(item)}
-                            disabled={!navigator.onLine}
-                            className="h-8 w-8"
-                          >
-                            <Upload className="h-4 w-4" />
-                          </Button>
-                        )}
-                        {onRemove && (
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            onClick={() => handleRemoveItem(item.id)}
-                            disabled={item.syncStatus === 'syncing'}
-                            className="h-8 w-8"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </ScrollArea>
-        )}
+        <CachedItemsTable
+          items={cachedItems}
+          onSyncItem={handleSyncItem}
+          onRemoveItem={handleRemoveItem}
+          formatTimestamp={formatTimestamp}
+        />
       </CardContent>
       <CardFooter className="flex justify-between border-t p-4">
         {onSyncAll && (
