@@ -1,361 +1,203 @@
 
-import React, { useState } from 'react';
-import Header from '@/components/Header';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, Bot, User, Download, Clipboard } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { 
-  Brain, Search, ArrowRight, Utensils, MessageSquare, Sparkles, 
-  Calendar, FileBarChart, BarChart3, ChevronRight 
-} from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import Header from '@/components/Header';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+// Sample AI responses for demo purposes
+const sampleResponses = [
+  "Based on the information provided, I recommend increasing your daily protein intake to 65g and ensuring you get at least 800mg of calcium daily, especially important during your second trimester.",
+  "Your child's current diet seems low in iron. Consider adding more leafy greens like palak, beans, and jaggery to help meet the recommended 10mg daily iron intake for children 2-5 years.",
+  "For lactation support, your diet should include at least 500 additional calories, focusing on galactagogues like fenugreek (methi), oats, and plenty of fluids. I notice your current intake is approximately 300 calories short of the recommendation.",
+  "The traditional Gujarati dish 'Undhiyu' provides excellent nutrition with seasonal vegetables. Consider reducing oil content by 25% and increasing the proportion of purple yam and green beans for better vitamin balance."
+];
+
+interface Message {
+  id: string;
+  content: string;
+  role: 'user' | 'assistant';
+  timestamp: Date;
+}
 
 const AIScreen = () => {
-  const { toast } = useToast();
-  const [mealQuery, setMealQuery] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [result, setResult] = useState(null);
-  
-  const handleGenerateRecommendation = () => {
-    if (!mealQuery.trim()) {
-      toast({
-        title: "Empty request",
-        description: "Please describe what kind of meal plan or nutrition advice you need",
-        variant: "destructive",
-      });
-      return;
-    }
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      content: "Hello! I'm your AI Nutrition Assistant. How can I help you today? You can ask me about meal planning, nutrition advice for pregnancy/lactation, or region-specific food recommendations.",
+      role: 'assistant',
+      timestamp: new Date(),
+    },
+  ]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    setIsGenerating(true);
-    
-    // Simulate AI processing with timeout
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    // Add user message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: input,
+      role: 'user',
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsProcessing(true);
+
+    // Simulate AI processing
     setTimeout(() => {
-      // Mock response data
-      const mockResponse = {
-        mealPlan: [
-          {
-            meal: "Breakfast",
-            options: [
-              "Spinach and feta omelet with whole grain toast",
-              "Oatmeal with almond milk, berries, and chia seeds",
-              "Greek yogurt with honey and mixed nuts"
-            ],
-            nutrients: ["protein", "calcium", "iron", "fiber"],
-            benefits: "Provides essential nutrients for fetal development and sustained energy for the mother."
-          },
-          {
-            meal: "Lunch",
-            options: [
-              "Lentil soup with whole grain bread",
-              "Quinoa salad with chickpeas, vegetables, and feta cheese",
-              "Brown rice with mixed vegetables and grilled tofu"
-            ],
-            nutrients: ["protein", "fiber", "folate", "iron"],
-            benefits: "Balanced meal with adequate protein and complex carbohydrates to maintain energy levels throughout the day."
-          },
-          {
-            meal: "Dinner",
-            options: [
-              "Grilled fish with roasted sweet potatoes and green beans",
-              "Vegetable curry with brown rice",
-              "Bean and vegetable stew with whole grain bread"
-            ],
-            nutrients: ["protein", "omega-3", "vitamins", "minerals"],
-            benefits: "Protein-rich dinner with essential fatty acids important for baby's brain development."
-          },
-          {
-            meal: "Snacks",
-            options: [
-              "Apple slices with almond butter",
-              "Carrot sticks with hummus",
-              "Handful of mixed nuts and dried fruits"
-            ],
-            nutrients: ["fiber", "healthy fats", "vitamins"],
-            benefits: "Healthy snacks to manage hunger between meals and prevent blood sugar spikes."
-          }
-        ],
-        advice: [
-          "Stay hydrated by drinking 8-10 glasses of water daily",
-          "Choose foods rich in folate, iron, calcium, and protein",
-          "Limit caffeine intake to less than 200mg per day",
-          "Avoid alcohol and raw or undercooked foods",
-          "Consider taking a prenatal vitamin as recommended by your doctor"
-        ]
+      const responseIndex = Math.floor(Math.random() * sampleResponses.length);
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: sampleResponses[responseIndex],
+        role: 'assistant',
+        timestamp: new Date(),
       };
-      
-      setResult(mockResponse);
-      setIsGenerating(false);
-      
-      toast({
-        title: "Recommendation generated",
-        description: "Your personalized nutrition plan is ready!",
-      });
-    }, 2000);
+
+      setMessages((prev) => [...prev, aiMessage]);
+      setIsProcessing(false);
+    }, 1500);
+  };
+
+  const copyToClipboard = (content: string) => {
+    navigator.clipboard.writeText(content);
+    toast.success('Copied to clipboard!');
+  };
+
+  const downloadChat = () => {
+    const chatContent = messages
+      .map((msg) => `[${msg.role}]: ${msg.content}`)
+      .join('\n\n');
+    
+    const blob = new Blob([chatContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nutrition-chat-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast.success('Chat history downloaded!');
   };
 
   return (
-    <div className="min-h-screen pb-20">
-      <Header title="AI Nutrition Center" showBackButton />
-      
-      <div className="px-4 py-6 space-y-6">
-        <Tabs defaultValue="recommend" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="recommend">Recommendations</TabsTrigger>
-            <TabsTrigger value="analyze">Meal Analysis</TabsTrigger>
-            <TabsTrigger value="chat">AI Nutrition Chat</TabsTrigger>
+    <div className="min-h-screen pb-20 md:pb-0">
+      <Header title="AI Nutrition Assistant" showBackButton />
+
+      <div className="px-4 py-4 md:px-6 max-w-5xl mx-auto">
+        <Tabs defaultValue="chat" className="mb-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="chat">Chat</TabsTrigger>
+            <TabsTrigger value="analysis">Nutrition Analysis</TabsTrigger>
           </TabsList>
           
-          {/* Recommendations Tab */}
-          <TabsContent value="recommend" className="space-y-4">
-            <Card className="border-purple-200">
-              <CardHeader className="bg-purple-50 border-b border-purple-200">
-                <CardTitle className="flex items-center text-purple-800">
-                  <Sparkles className="h-5 w-5 mr-2 text-purple-600" />
-                  Get AI Nutrition Recommendations
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium mb-1 block">What type of nutrition plan do you need?</label>
-                    <Textarea 
-                      placeholder="E.g., I need a meal plan for my third trimester of pregnancy, I'm vegetarian and have gestational diabetes."
-                      className="min-h-[100px]"
-                      value={mealQuery}
-                      onChange={(e) => setMealQuery(e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex-1">
-                      <label className="text-sm font-medium mb-1 block">Dietary Preference</label>
-                      <Select defaultValue="any">
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select preference" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="any">No restrictions</SelectItem>
-                          <SelectItem value="vegetarian">Vegetarian</SelectItem>
-                          <SelectItem value="vegan">Vegan</SelectItem>
-                          <SelectItem value="gluten-free">Gluten-free</SelectItem>
-                          <SelectItem value="lactose-free">Lactose-free</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="flex-1">
-                      <label className="text-sm font-medium mb-1 block">Regional Cuisine</label>
-                      <Select defaultValue="indian">
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select cuisine" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="indian">Indian</SelectItem>
-                          <SelectItem value="north-indian">North Indian</SelectItem>
-                          <SelectItem value="south-indian">South Indian</SelectItem>
-                          <SelectItem value="east-indian">East Indian</SelectItem>
-                          <SelectItem value="west-indian">West Indian</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch id="local-ingredients" defaultChecked />
-                    <label htmlFor="local-ingredients" className="text-sm font-medium">
-                      Prefer locally available ingredients
-                    </label>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="border-t flex justify-end pt-4 bg-muted/20">
-                <Button 
-                  onClick={handleGenerateRecommendation}
-                  disabled={isGenerating}
-                  className="flex items-center"
-                >
-                  {isGenerating ? "Generating..." : "Generate Recommendations"}
-                  {!isGenerating && <ArrowRight className="ml-2 h-4 w-4" />}
-                </Button>
-              </CardFooter>
-            </Card>
-            
-            {result && (
-              <div className="space-y-4 animate-fade-in">
-                <Card className="border-primary">
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Utensils className="h-5 w-5 mr-2 text-primary" />
-                      Your Personalized Meal Plan
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {result.mealPlan.map((meal, index) => (
-                      <div key={index} className="space-y-2">
-                        <h3 className="font-medium text-lg">{meal.meal}</h3>
-                        <ul className="space-y-2 ml-5 list-disc">
-                          {meal.options.map((option, i) => (
-                            <li key={i} className="text-sm">{option}</li>
-                          ))}
-                        </ul>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {meal.nutrients.map((nutrient, i) => (
-                            <Badge key={i} variant="secondary" className="text-xs">
-                              {nutrient}
-                            </Badge>
-                          ))}
+          <TabsContent value="chat" className="space-y-4">
+            <Card className="border-border">
+              <CardContent className="p-0">
+                {/* Chat messages container */}
+                <div className="flex flex-col h-[60vh] md:h-[65vh]">
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    {messages.map((message) => (
+                      <div
+                        key={message.id}
+                        className={`flex ${
+                          message.role === 'user' ? 'justify-end' : 'justify-start'
+                        }`}
+                      >
+                        <div
+                          className={`max-w-[80%] rounded-xl px-4 py-3 ${
+                            message.role === 'user'
+                              ? 'bg-primary text-white rounded-tr-none'
+                              : 'bg-muted rounded-tl-none'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 mb-1">
+                            {message.role === 'assistant' ? (
+                              <Bot className="h-4 w-4" />
+                            ) : (
+                              <User className="h-4 w-4" />
+                            )}
+                            <span className="text-xs opacity-75">
+                              {message.role === 'assistant' ? 'AI Assistant' : 'You'}
+                            </span>
+                          </div>
+                          <p className="text-sm">{message.content}</p>
+                          {message.role === 'assistant' && (
+                            <div className="flex justify-end mt-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 rounded-full"
+                                onClick={() => copyToClipboard(message.content)}
+                              >
+                                <Clipboard className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          )}
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">{meal.benefits}</p>
                       </div>
                     ))}
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Brain className="h-5 w-5 mr-2 text-primary" />
-                      Nutrition Advice
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {result.advice.map((tip, index) => (
-                        <li key={index} className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center mr-2 mt-0.5">
-                            <span className="text-xs font-medium text-primary">{index + 1}</span>
-                          </div>
-                          <span>{tip}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-                
-                <div className="flex justify-center gap-2">
-                  <Button variant="outline">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Add to My Plan
-                  </Button>
-                  <Button variant="outline">
-                    <FileBarChart className="h-4 w-4 mr-2" />
-                    Save as PDF
-                  </Button>
-                </div>
-              </div>
-            )}
-          </TabsContent>
-          
-          {/* Meal Analysis Tab */}
-          <TabsContent value="analyze" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <BarChart3 className="h-5 w-5 mr-2" />
-                  Analyze Your Meal
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <Textarea 
-                    placeholder="List the foods in your meal (e.g., 1 cup rice, 100g chicken, 1 cup spinach)"
-                    className="min-h-[100px]"
-                  />
-                  
-                  <Button className="w-full">
-                    Analyze Nutritional Content
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm text-muted-foreground">
-                  Upload a photo of your meal for analysis (coming soon)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="border-2 border-dashed rounded-lg p-6 flex items-center justify-center">
-                  <p className="text-muted-foreground">
-                    This feature will be available soon
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          {/* AI Chat Tab */}
-          <TabsContent value="chat" className="space-y-4">
-            <Card className="min-h-[400px] flex flex-col">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <MessageSquare className="h-5 w-5 mr-2" />
-                  Chat with Nutrition AI
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1">
-                <div className="h-[300px] border rounded-lg p-4 overflow-y-auto">
-                  <div className="flex flex-col space-y-4">
-                    <div className="bg-muted p-3 rounded-lg max-w-[80%]">
-                      <p className="text-sm">
-                        Hello! I'm your nutrition assistant. Ask me any questions about pregnancy nutrition, breastfeeding, or child nutrition.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-primary/10 p-3 rounded-lg max-w-[80%] ml-auto">
-                      <p className="text-sm">
-                        What foods should I eat to increase my iron levels during pregnancy?
-                      </p>
-                    </div>
-                    
-                    <div className="bg-muted p-3 rounded-lg max-w-[80%]">
-                      <p className="text-sm">
-                        To boost iron levels during pregnancy, focus on these foods:
-                        <br /><br />
-                        1. Leafy greens like spinach and kale
-                        <br />
-                        2. Lentils and beans
-                        <br />
-                        3. Fortified cereals
-                        <br />
-                        4. Red meat (if you're not vegetarian)
-                        <br />
-                        5. Dried fruits like apricots and raisins
-                        <br /><br />
-                        Also, pair these with vitamin C-rich foods to improve absorption, and avoid tea or coffee with meals as they can inhibit iron absorption.
-                      </p>
-                    </div>
+                    <div ref={messagesEndRef} />
+                  </div>
+
+                  {/* Input area */}
+                  <div className="border-t border-border p-4">
+                    <form onSubmit={handleSubmit} className="flex gap-2">
+                      <Input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Ask about nutrition, meal plans, or regional foods..."
+                        disabled={isProcessing}
+                        className="flex-1"
+                      />
+                      <Button type="submit" disabled={isProcessing}>
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </form>
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="border-t pt-4">
-                <div className="relative w-full">
-                  <Input 
-                    placeholder="Type your nutrition question here..." 
-                    className="pr-[70px]"
-                  />
-                  <Button 
-                    className="absolute right-0 top-0 bottom-0 rounded-l-none"
-                    size="sm"
-                  >
-                    Send
-                  </Button>
-                </div>
-              </CardFooter>
             </Card>
             
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground">
-                Powered by AI nutrition models trained on maternal and child health research
-              </p>
+            <div className="flex justify-end">
+              <Button variant="outline" size="sm" onClick={downloadChat}>
+                <Download className="h-4 w-4 mr-2" />
+                Download Chat
+              </Button>
             </div>
+          </TabsContent>
+          
+          <TabsContent value="analysis">
+            <Card>
+              <CardContent className="py-6">
+                <div className="text-center space-y-4">
+                  <Bot className="w-12 h-12 text-primary mx-auto" />
+                  <h3 className="text-lg font-medium">Nutrition Analysis</h3>
+                  <p className="text-muted-foreground">
+                    Upload your food journal or input your daily meals to get a comprehensive 
+                    nutritional analysis tailored to your specific health needs.
+                  </p>
+                  <Button className="mt-4">
+                    Start Analysis
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
