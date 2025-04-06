@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -193,7 +192,7 @@ const DataEntryCache: React.FC<DataEntryCacheProps> = ({
                             variant="ghost" 
                             size="icon" 
                             onClick={() => handleSyncItem(item)}
-                            disabled={item.syncStatus === 'syncing' || !navigator.onLine}
+                            disabled={!navigator.onLine}
                             className="h-8 w-8"
                           >
                             <Upload className="h-4 w-4" />
