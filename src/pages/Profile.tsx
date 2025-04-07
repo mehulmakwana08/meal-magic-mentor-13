@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Mail, Briefcase, Phone, Edit, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -8,48 +7,131 @@ import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import ProfileEditForm from '@/components/ProfileEditForm';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import authService from '@/services/authService';
+import { AxiosError } from 'axios';
 
 const Profile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // In a real application, this would come from your auth context
+  // State for user data
   const [userData, setUserData] = useState({
-    name: "Ayushi Sharma",
-    email: "ayushi@example.com",
-    role: "Anganwadi Worker",
-    phone: "+91 98765 43210",
-    center: "Anganwadi Center #42, Jaipur",
-    joinedDate: "March 2022",
+    name: "",
+    email: "",
+    role: "",
+    phone: "",
+    center: "",
+    joinedDate: "",
     profileImage: undefined
   });
 
-  const handleLogout = () => {
-    // In a real application, this would call your auth logout method
-    toast({
-      title: "Logged out successfully",
-      description: "You have been logged out of your account",
-    });
-    navigate("/login");
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await authService.getCurrentUser();
+        
+        // Update state with fetched user data
+        setUserData({
+          name: response.data.name || "",
+          email: response.data.email || "",
+          role: response.data.role || "Anganwadi Worker",
+          phone: response.data.phone || "",
+          center: response.data.center || "Anganwadi Center #42, Jaipur",
+          joinedDate: response.data.joinedDate || "March 2022",
+          profileImage: response.data.profileImage
+        });
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        toast({
+          title: "Failed to load profile",
+          description: "Could not retrieve your profile information.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [toast]);
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      
+      // Clear local storage
+      localStorage.removeItem('userRole');
+      localStorage.setItem('isLoggedOut', 'true');
+      localStorage.removeItem('token');
+      
+      toast({
+        title: "Logged out successfully",
+        description: "You have been logged out of your account",
+      });
+      
+      navigate("/login");
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast({
+        title: "Logout failed",
+        description: "An error occurred while logging out. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleProfileUpdate = (values) => {
-    // In a real application, this would call an API to update the profile
-    setUserData({
-      ...userData,
-      ...values,
-    });
-    setIsEditing(false);
-    toast({
-      title: "Profile updated",
-      description: "Your profile information has been updated successfully",
-    });
+  const handleProfileUpdate = async (values) => {
+    try {
+      // Call the API to update user details
+      await authService.updateDetails({
+        name: values.name,
+        email: values.email
+      });
+      
+      // Update local state
+      setUserData({
+        ...userData,
+        ...values,
+      });
+      
+      setIsEditing(false);
+      toast({
+        title: "Profile updated",
+        description: "Your profile information has been updated successfully",
+      });
+    } catch (err) {
+      // Handle error
+      const error = err as AxiosError<{error?: string; message?: string}>;
+      const errorMessage = error.response?.data?.error || 
+                          error.response?.data?.message || 
+                          'Failed to update profile. Please try again.';
+      
+      toast({
+        title: "Update failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pb-20">
+        <Header title="Profile" showBackButton />
+        <div className="px-4 py-6 flex justify-center items-center h-[80vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pb-20">

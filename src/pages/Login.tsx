@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Mail, Key, LogIn, Send, KeyRound, Lock } from 'lucide-react';
@@ -9,11 +8,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import authService from '@/services/authService';
+import { AxiosError } from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<'doctor' | 'mother'>('doctor');
   const [resetEmail, setResetEmail] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -28,15 +30,21 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
     
-    // Store user role in localStorage immediately
-    localStorage.setItem('userRole', userRole);
-    console.log("User role set to:", userRole);
-    
-    // Simulate login for demo purposes
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Call the login API endpoint
+      const response = await authService.login({
+        email,
+        password
+      });
       
+      // Store auth token or user info from response if needed
+      localStorage.setItem('userRole', userRole);
+      localStorage.setItem('isLoggedOut', 'false');
+      localStorage.setItem('token', response.token);
+      
+      // Show success toast
       toast({
         title: "Login successful",
         description: `Welcome back to NutriTrack as a ${userRole}!`,
@@ -47,57 +55,86 @@ const Login = () => {
         const surveyCompleted = localStorage.getItem('motherSurveyCompleted');
         if (!surveyCompleted) {
           // First time login as mother, redirect to survey
-          console.log("First time mother login, redirecting to survey");
           navigate('/mother-survey');
-          return;
         } else {
           // Already completed survey, go to mother home
-          console.log("Mother login with completed survey, redirecting to home");
-          window.location.href = '/';
-          return;
+          navigate('/');
         }
+        return; // Added to prevent the default redirect below from executing
       }
       
       // Doctor role or any other case
-      console.log("Doctor login, redirecting to home");
-      window.location.href = '/';
-    }, 1500);
+      navigate('/');
+    } catch (err) {
+      // Handle error
+      const error = err as AxiosError<{error?: string; message?: string}>;
+      const errorMessage = error.response?.data?.error || 
+                          error.response?.data?.message || 
+                          'Invalid email or password. Please try again.';
+      
+      setError(errorMessage);
+      toast({
+        title: "Login failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleResetPassword = async () => {
     setResetLoading(true);
     
     try {
-      // For demo purposes we'll just simulate the process
-      setTimeout(() => {
-        if (resetStep === 'email') {
-          toast({
-            title: "Reset email sent",
-            description: `Check your inbox at ${resetEmail} for a reset code.`,
-          });
-          setResetStep('code');
-        } else if (resetStep === 'code') {
-          setResetStep('newPassword');
-        } else if (resetStep === 'newPassword') {
-          toast({
-            title: "Password reset successful",
-            description: "You can now log in with your new password.",
-          });
-          // Close the dialog and reset the form
-          setShowForgotPassword(false);
-          setResetStep('email');
-          setResetEmail('');
-          setResetCode('');
-          setNewPassword('');
-        }
-        setResetLoading(false);
-      }, 1500);
-    } catch (error) {
+      if (resetStep === 'email') {
+        // Request forgot password OTP
+        await authService.forgotPassword({ email: resetEmail });
+        
+        toast({
+          title: "Reset email sent",
+          description: `Check your inbox at ${resetEmail} for a reset code.`,
+        });
+        setResetStep('code');
+      } else if (resetStep === 'code') {
+        // Verify OTP
+        await authService.verifyOTP({ 
+          email: resetEmail,
+          otp: resetCode 
+        });
+        
+        setResetStep('newPassword');
+      } else if (resetStep === 'newPassword') {
+        // Reset password
+        await authService.resetPassword({
+          password: newPassword
+        });
+        
+        toast({
+          title: "Password reset successful",
+          description: "You can now log in with your new password.",
+        });
+        
+        // Close the dialog and reset the form
+        setShowForgotPassword(false);
+        setResetStep('email');
+        setResetEmail('');
+        setResetCode('');
+        setNewPassword('');
+      }
+    } catch (err) {
+      // Handle error
+      const error = err as AxiosError<{error?: string; message?: string}>;
+      const errorMessage = error.response?.data?.error || 
+                          error.response?.data?.message || 
+                          'Something went wrong. Please try again.';
+      
       toast({
         title: "Reset failed",
-        description: "Something went wrong. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
+    } finally {
       setResetLoading(false);
     }
   };
@@ -236,6 +273,12 @@ const Login = () => {
             <h1 className="text-2xl font-bold text-primary md:text-3xl">Welcome Back</h1>
             <p className="mt-2 text-muted-foreground">Log in to access your nutrition journey</p>
           </div>
+          
+          {error && (
+            <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
+              {error}
+            </div>
+          )}
           
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-4">

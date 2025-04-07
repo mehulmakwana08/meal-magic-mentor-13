@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -92,11 +91,16 @@ const AppContent = () => {
   const hideNavbar = isAuthRoute || isLoggedOut;
 
   // In a real app, this would come from your auth context
-  const userRole = localStorage.getItem("userRole") || "doctor";
+  const userRole = localStorage.getItem("userRole") || "";
+
+  // Redirect to login if not authenticated
+  if (isLoggedOut && !isAuthRoute) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <>
-      {userRole === "doctor" ? (
+      {userRole === "doctor" || userRole === "nutritionist" ? (
         <div className="flex min-h-screen bg-background">
           {/* Conditionally render WebNavbar */}
           {!hideNavbar && <WebNavbar className="hidden md:flex" />}
@@ -122,6 +126,13 @@ const AppContent = () => {
               <Route path="/anganwadi-dashboard" element={<AnganwadiDashboard />} />
               <Route path="/impact-dashboard" element={<ImpactDashboard />} />
               <Route path="/ai-nutrition" element={<AIScreen />} />
+              
+              {/* Restrict mother routes for doctor/nutritionist */}
+              <Route path="/mother-survey" element={<Navigate to="/" replace />} />
+              <Route path="/complain" element={<Navigate to="/complains" replace />} />
+              <Route path="/ai-nutrition-planning" element={<Navigate to="/ai-nutrition" replace />} />
+              <Route path="/local-food-database" element={<Navigate to="/" replace />} />
+              <Route path="/real-time-monitoring" element={<Navigate to="/" replace />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
@@ -153,6 +164,13 @@ const AppContent = () => {
               <Route path="/local-food-database" element={<LocalFoodDatabase />} />
               <Route path="/real-time-monitoring" element={<RealTimeMonitoring />} />
               <Route path="/ai-nutrition" element={<AIScreen />} />
+              
+              {/* Restrict doctor routes for mother */}
+              <Route path="/anganwadi-dashboard" element={<Navigate to="/" replace />} />
+              <Route path="/impact-dashboard" element={<Navigate to="/" replace />} />
+              <Route path="/profiles" element={<Navigate to="/" replace />} />
+              <Route path="/profiles/*" element={<Navigate to="/" replace />} />
+              <Route path="/complains" element={<Navigate to="/complain" replace />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>

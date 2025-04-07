@@ -1,31 +1,63 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Key, User, UserPlus } from 'lucide-react';
 import AnimatedButton from '@/components/AnimatedButton';
 import { useToast } from '@/hooks/use-toast';
+import authService from '@/services/authService';
+import { AxiosError } from 'axios';
 
 const SignUp = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!termsAccepted) {
+      setError('You must accept the Terms of Service and Privacy Policy to create an account');
+      return;
+    }
+    
+    setError(null);
     setIsLoading(true);
     
-    // Simulate account creation for demo purposes
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Call the register API endpoint
+      const response = await authService.register({
+        name,
+        email,
+        password,
+      });
+      
+      // Show success toast
       toast({
         title: "Account created successfully",
-        description: "Welcome to NutriTrack! You can now log in.",
+        description: "Please check your email for a verification link.",
       });
+      
+      // Navigate to login page
       navigate('/login');
-    }, 1500);
+    } catch (err) {
+      // Handle error
+      const error = err as AxiosError<{error?: string; message?: string}>;
+      const errorMessage = error.response?.data?.error || 
+                           error.response?.data?.message || 
+                           'Failed to create account. Please try again.';
+      
+      setError(errorMessage);
+      toast({
+        title: "Registration failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -37,6 +69,12 @@ const SignUp = () => {
             <h1 className="text-2xl font-bold text-primary md:text-3xl">Join NutriTrack</h1>
             <p className="mt-2 text-muted-foreground">Create an account to start your nutrition journey</p>
           </div>
+          
+          {error && (
+            <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
+              {error}
+            </div>
+          )}
           
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
             <div className="space-y-4">
@@ -113,10 +151,12 @@ const SignUp = () => {
                 name="terms"
                 type="checkbox"
                 required
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
                 className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
               />
               <label htmlFor="terms" className="ml-2 block text-sm text-muted-foreground">
-                I agree to the <a href="#" className="text-primary hover:text-primary/80">Terms of Service</a> and <a href="#" className="text-primary hover:text-primary/80">Privacy Policy</a>
+                I agree to the <Link to="/terms-of-service" className="text-primary hover:text-primary/80">Terms of Service</Link> and <Link to="/privacy-security" className="text-primary hover:text-primary/80">Privacy Policy</Link>
               </label>
             </div>
 
