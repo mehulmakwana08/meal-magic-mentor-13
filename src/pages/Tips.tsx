@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { Volume, Share2, Bookmark, BookmarkCheck, ThumbsUp, Search } from 'lucide-react';
 import Header from '@/components/Header';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { toast } from 'sonner';
 
 interface TipCardProps {
   title: string;
@@ -55,6 +57,8 @@ const TipCard = ({
           
           <button 
             onClick={onPlay}
+            type="button"
+            aria-label="Play audio"
             className="p-1.5 sm:p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex-shrink-0"
           >
             <Volume className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -69,6 +73,8 @@ const TipCard = ({
           <div className="flex space-x-1">
             <button 
               onClick={onLike}
+              type="button"
+              aria-label="Like tip"
               className="p-1 sm:p-1.5 rounded-full hover:bg-muted transition-colors flex items-center gap-1"
             >
               <ThumbsUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
@@ -76,6 +82,8 @@ const TipCard = ({
             </button>
             <button 
               onClick={onSave}
+              type="button"
+              aria-label={isSaved ? "Remove from saved" : "Save tip"}
               className="p-1 sm:p-1.5 rounded-full hover:bg-muted transition-colors"
             >
               {isSaved ? (
@@ -86,6 +94,8 @@ const TipCard = ({
             </button>
             <button 
               onClick={onShare}
+              type="button"
+              aria-label="Share tip"
               className="p-1 sm:p-1.5 rounded-full hover:bg-muted transition-colors"
             >
               <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
@@ -175,11 +185,29 @@ const Tips = () => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
+        toast.info("Tip removed from saved items");
       } else {
         newSet.add(id);
+        toast.success("Tip saved successfully");
       }
       return newSet;
     });
+  };
+
+  const handlePlayAudio = (title: string) => {
+    console.log('Playing audio for:', title);
+    toast.info(`Playing audio for: ${title}`);
+  };
+
+  const handleLike = (title: string) => {
+    console.log('Liked:', title);
+    toast.success(`You liked: ${title}`);
+  };
+
+  const handleShare = (title: string) => {
+    console.log('Sharing:', title);
+    navigator.clipboard.writeText(`Check out this nutrition tip: ${title}`);
+    toast.success("Link copied to clipboard");
   };
 
   return (
@@ -239,10 +267,10 @@ const Tips = () => {
               language={tip.language}
               isSaved={savedTips.has(tip.id)}
               likes={tip.likes}
-              onPlay={() => console.log('Playing audio for:', tip.title)}
+              onPlay={() => handlePlayAudio(tip.title)}
               onSave={() => toggleSaved(tip.id)}
-              onLike={() => console.log('Liked:', tip.title)}
-              onShare={() => console.log('Sharing:', tip.title)}
+              onLike={() => handleLike(tip.title)}
+              onShare={() => handleShare(tip.title)}
             />
           ))}
           
@@ -251,6 +279,7 @@ const Tips = () => {
               <p className="text-muted-foreground">No tips found for this category</p>
               {searchQuery && (
                 <button 
+                  type="button"
                   className="mt-2 text-sm text-primary hover:underline"
                   onClick={() => setSearchQuery('')}
                 >
