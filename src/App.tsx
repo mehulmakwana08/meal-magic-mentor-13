@@ -100,7 +100,7 @@ const AppContent = () => {
 
   return (
     <>
-      {userRole === "doctor" || userRole === "nutritionist" ? (
+      {userRole === "admin" || userRole === "nutritionist" || userRole === "anganwadi" ? (
         <div className="flex min-h-screen bg-background">
           {/* Conditionally render WebNavbar */}
           {!hideNavbar && <WebNavbar className="hidden md:flex" />}

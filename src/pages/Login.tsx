@@ -16,7 +16,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [userRole, setUserRole] = useState<'doctor' | 'mother'>('doctor');
   const [resetEmail, setResetEmail] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetStep, setResetStep] = useState<'email' | 'code' | 'newPassword'>('email');
@@ -39,7 +38,13 @@ const Login = () => {
         password
       });
       
-      // Store auth token or user info from response if needed
+      console.log("Login response:", response);
+      
+      // Fixed: Correctly access the role from the API response
+      const userRole = response?.user?.role || "doctor";
+      console.log("User role:", userRole);
+      
+      // Store auth token or user info from response
       localStorage.setItem('userRole', userRole);
       localStorage.setItem('isLoggedOut', 'false');
       localStorage.setItem('token', response.token);
@@ -50,7 +55,7 @@ const Login = () => {
         description: `Welcome back to NutriTrack as a ${userRole}!`,
       });
       
-      // Check if this is the first login for a mother user
+      // Handle redirection based on role
       if (userRole === 'mother') {
         const surveyCompleted = localStorage.getItem('motherSurveyCompleted');
         if (!surveyCompleted) {
@@ -60,7 +65,19 @@ const Login = () => {
           // Already completed survey, go to mother home
           navigate('/');
         }
-        return; // Added to prevent the default redirect below from executing
+        return;
+      } else if (userRole === 'admin') {
+        // Redirect admin to nutritionist dashboard
+        navigate('/');
+        return;
+      } else if (userRole === 'nutritionist') {
+        // Redirect nutritionist to nutritionist dashboard
+        navigate('/nutritionist');
+        return;
+      } else if (userRole === 'anganwadi') {
+
+        navigate('/anganwadi-dashboard');
+        return;
       }
       
       // Doctor role or any other case
@@ -321,36 +338,6 @@ const Login = () => {
                     className="block w-full pl-10 pr-3 py-3 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                     placeholder="••••••••"
                   />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  I am a:
-                </label>
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setUserRole('doctor')}
-                    className={`flex-1 py-2 px-4 rounded-lg border border-border transition-colors ${
-                      userRole === 'doctor'
-                        ? 'bg-primary text-white'
-                        : 'bg-background hover:bg-muted'
-                    }`}
-                  >
-                    Doctor/Worker
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setUserRole('mother')}
-                    className={`flex-1 py-2 px-4 rounded-lg border border-border transition-colors ${
-                      userRole === 'mother'
-                        ? 'bg-primary text-white'
-                        : 'bg-background hover:bg-muted'
-                    }`}
-                  >
-                    Mother/Patient
-                  </button>
                 </div>
               </div>
             </div>
