@@ -1,12 +1,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Download, Clipboard } from 'lucide-react';
+import { Send, Bot, User, Download, Clipboard, Upload, FileText } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import Header from '@/components/Header';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 // Sample AI responses for demo purposes
 const sampleResponses = [
@@ -35,6 +38,10 @@ const AIScreen = () => {
   ]);
   const [isProcessing, setIsProcessing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [analysisDialogOpen, setAnalysisDialogOpen] = useState(false);
+  const [mealInput, setMealInput] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -95,6 +102,63 @@ const AIScreen = () => {
     toast.success('Chat history downloaded!');
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const handleStartAnalysis = () => {
+    setAnalysisDialogOpen(true);
+  };
+
+  const handleAnalysisSubmit = () => {
+    // Validation check
+    if (!mealInput.trim() && !selectedFile) {
+      toast.error("Please enter your meals or upload a food journal");
+      return;
+    }
+
+    // Processing simulation
+    toast.info("Processing your nutrition data...");
+    setAnalysisDialogOpen(false);
+    
+    setTimeout(() => {
+      // Add user's meal input as a message
+      const content = mealInput.trim() 
+        ? `Here are my daily meals:\n${mealInput}` 
+        : "I've uploaded my food journal for analysis.";
+      
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        content,
+        role: 'user',
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, userMessage]);
+      
+      // Simulate AI response after processing
+      setTimeout(() => {
+        const analysisResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          content: "Based on your food journal, your diet is currently providing approximately 1800 calories daily with 45% carbohydrates, 25% protein, and 30% fats. I notice your calcium intake is below the recommended level for your profile. Consider adding more dairy products or calcium-rich vegetables like broccoli and spinach. Your iron levels also appear adequate but could be optimized with vitamin C-rich foods to improve absorption.",
+          role: 'assistant',
+          timestamp: new Date(),
+        };
+        
+        setMessages(prev => [...prev, analysisResponse]);
+        
+        // Reset form
+        setMealInput('');
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      }, 2000);
+    }, 3000);
+  };
+
   return (
     <div className="min-h-screen pb-20 md:pb-0">
       <Header title="AI Nutrition Assistant" showBackButton />
@@ -136,7 +200,7 @@ const AIScreen = () => {
                               {message.role === 'assistant' ? 'AI Assistant' : 'You'}
                             </span>
                           </div>
-                          <p className="text-sm">{message.content}</p>
+                          <p className="text-sm whitespace-pre-line">{message.content}</p>
                           {message.role === 'assistant' && (
                             <div className="flex justify-end mt-2">
                               <Button
@@ -192,7 +256,7 @@ const AIScreen = () => {
                     Upload your food journal or input your daily meals to get a comprehensive 
                     nutritional analysis tailored to your specific health needs.
                   </p>
-                  <Button className="mt-4">
+                  <Button className="mt-4" onClick={handleStartAnalysis}>
                     Start Analysis
                   </Button>
                 </div>
@@ -201,6 +265,68 @@ const AIScreen = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Analysis Dialog */}
+      <Dialog open={analysisDialogOpen} onOpenChange={setAnalysisDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Nutrition Analysis</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="meals">Enter your daily meals</Label>
+              <Textarea
+                id="meals"
+                placeholder="Breakfast: 2 eggs, toast, orange juice&#10;Lunch: Chicken salad with olive oil&#10;Dinner: Brown rice, grilled fish, steamed vegetables"
+                className="min-h-[120px]"
+                value={mealInput}
+                onChange={(e) => setMealInput(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Or upload your food journal</Label>
+              <div className="flex items-center justify-center w-full">
+                <label
+                  htmlFor="food-journal"
+                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-background hover:bg-muted/50"
+                >
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
+                    <p className="mb-2 text-sm text-muted-foreground">
+                      <span className="font-semibold">Click to upload</span> or drag and drop
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      PDF, TXT, or image files
+                    </p>
+                  </div>
+                  <input
+                    id="food-journal"
+                    type="file"
+                    className="hidden"
+                    accept=".pdf,.txt,.jpg,.jpeg,.png"
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                  />
+                </label>
+              </div>
+              {selectedFile && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
+                  <FileText className="h-4 w-4" />
+                  <span className="truncate">{selectedFile.name}</span>
+                </div>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAnalysisDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="button" onClick={handleAnalysisSubmit}>
+              Analyze
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
