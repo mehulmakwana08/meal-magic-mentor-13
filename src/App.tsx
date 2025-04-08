@@ -139,7 +139,7 @@ const AppContent = () => {
           </main>
           {!hideNavbar && <BottomNav />}
         </div>
-      ) : userRole === "mother" ? (
+      ) : userRole === "mother" || userRole === "admin" ? (
         <div className="flex min-h-screen bg-background">
           {/* Conditionally render MotherNavbar */}
           {!hideNavbar && <MotherNavbar className="hidden md:flex" />}
